@@ -23,6 +23,26 @@ void Game::gameLoop() {
 		while (m_window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				m_window->close();
+			// Controls
+			if (event.type == sf::Event::KeyPressed) {
+				switch (event.key.code)
+				{
+				case sf::Keyboard::W:
+					m_player.worldMove(NORTH, 1);
+					break;
+				case sf::Keyboard::D:
+					m_player.worldMove(EAST, 1);
+					break;
+				case sf::Keyboard::S:
+					m_player.worldMove(SOUTH, 1);
+					break;
+				case sf::Keyboard::A:
+					m_player.worldMove(WEST, 1);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 
 		// Todo: get a clock for time
