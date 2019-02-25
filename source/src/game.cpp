@@ -9,6 +9,12 @@ Game::Game() {
 	// PLACEHOLDER: init player
 	m_player = Sprite();
 
+	// PLACEHOLDER: init level
+	_level = Level();
+	_level.tmpInit();
+	auto playerPos = _level.getPlayerStartingPos();
+	m_player.setWorldPos(playerPos.x, playerPos.y);
+
 	this->gameLoop();
 }
 
@@ -53,6 +59,7 @@ void Game::gameLoop() {
 
 void Game::draw() {
 	m_window->clear();
+	m_window->draw(_level);
 	m_window->draw(m_player);
 	m_window->display();
 }
