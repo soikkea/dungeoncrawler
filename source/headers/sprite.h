@@ -9,6 +9,7 @@ public:
 	Sprite();
 	virtual ~Sprite();
 	void worldMove(Direction direction, int steps);
+	void setWorldPos(int x, int y);
 protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	sf::VertexArray m_vertices;

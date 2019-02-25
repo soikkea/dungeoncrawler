@@ -51,3 +51,10 @@ void Sprite::worldMove(Direction direction, int steps)
 	this->setPosition(sf::Vector2f(m_worldX, m_worldY) * (float)globals::TILE_SIZE);
 }
 
+void Sprite::setWorldPos(int x, int y)
+{
+	this->m_worldX = x;
+	this->m_worldY = y;
+	this->setPosition(sf::Vector2f(x, y) * (float)globals::TILE_SIZE);
+}
+
