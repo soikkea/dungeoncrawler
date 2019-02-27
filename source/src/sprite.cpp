@@ -51,6 +51,15 @@ void Sprite::worldMove(Direction direction, int steps)
 	this->setPosition(sf::Vector2f(m_worldX, m_worldY) * (float)globals::TILE_SIZE);
 }
 
+void Sprite::moveStep(Direction direction, const Level & level)
+{
+	sf::Vector2i directionVector = getDirectionUnitVector(direction);
+	int newX = m_worldX + directionVector.x;
+	int newY = m_worldY + directionVector.y;
+	if (!level.isEmpty(newX, newY)) return;
+	setWorldPos(newX, newY);
+}
+
 void Sprite::setWorldPos(int x, int y)
 {
 	this->m_worldX = x;
