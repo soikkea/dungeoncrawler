@@ -8,6 +8,11 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 	_vertices.setPrimitiveType(sf::Quads);
 	_vertices.resize(width * height * 4);
 
+	_width = width;
+	_height = height;
+
+	_tiles.resize(width * height);
+
 	// Populate the vertex array, with one quad per tile
 	for (unsigned int i = 0; i < width; i++)
 	{
@@ -15,6 +20,8 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 		{
 			// Get the current tile number
 			int tileNumber = tiles[i + j * width];
+
+			_tiles[i + j * width] = tileNumber;
 
 			// Get color for tile
 			sf::Color tileColor;
@@ -72,6 +79,19 @@ void Level::tmpInit()
 const sf::Vector2u Level::getPlayerStartingPos() const
 {
 	return _playerStartingPos;
+}
+
+bool Level::isEmpty(unsigned int x, unsigned int y) const
+{
+	if (x >= _width || y >= _height) return false;
+	int tile = getTile(x, y);
+	if (tile == Level::WALL) return false;
+	return true;
+}
+
+int Level::getTile(unsigned int x, unsigned int y) const
+{
+	return _tiles.at(x + y * _width);
 }
 
 void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
