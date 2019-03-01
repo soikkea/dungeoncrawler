@@ -24,6 +24,10 @@ Game::~Game() {
 
 void Game::gameLoop() {
 
+	sf::Clock clock;
+
+	float last_update_time = clock.getElapsedTime().asSeconds();
+
 	while (m_window->isOpen()) {
 		sf::Event event;
 		while (m_window->pollEvent(event)) {
@@ -51,8 +55,10 @@ void Game::gameLoop() {
 			}
 		}
 
-		// Todo: get a clock for time
-		update(0);
+		float current_time = clock.getElapsedTime().asSeconds();
+		float elapsed_time = current_time - last_update_time;
+		last_update_time = current_time;
+		update(elapsed_time);
 		draw();
 	}
 }
@@ -65,5 +71,8 @@ void Game::draw() {
 }
 
 void Game::update(float elapsedTime) {
-
+	char buffer[100];
+	snprintf(buffer, sizeof(buffer), "Dungeoncrawler, FPS=%3.2f", 1.0f/elapsedTime);
+	std::string title = buffer;
+	m_window->setTitle(title);
 }
