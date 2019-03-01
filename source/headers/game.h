@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "sprite.h"
+#include "creature.h"
 #include "level.h"
 
 class Game {
@@ -13,6 +13,6 @@ private:
 	void update(float elapsedTime);
 
 	sf::RenderWindow* m_window;
-	Sprite m_player;
+	Creature m_player;
 	Level _level;
 };

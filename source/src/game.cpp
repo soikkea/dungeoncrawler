@@ -2,17 +2,18 @@
 
 #include "game.h"
 
-Game::Game() {
+Game::Game() : 
+	m_player(0, 0)
+{
 	// Initialize RendererWindow
 	m_window = new sf::RenderWindow(sf::VideoMode(800, 600), "Dungeoncrawler");
-
-	// PLACEHOLDER: init player
-	m_player = Sprite();
 
 	// PLACEHOLDER: init level
 	_level = Level();
 	_level.tmpInit();
 	auto playerPos = _level.getPlayerStartingPos();
+
+	// PLACEHOLDER: init player
 	m_player.setWorldPos(playerPos.x, playerPos.y);
 
 	this->gameLoop();
@@ -37,6 +38,9 @@ void Game::gameLoop() {
 			if (event.type == sf::Event::KeyPressed) {
 				switch (event.key.code)
 				{
+				case sf::Keyboard::Escape:
+					m_window->close();
+					break;
 				case sf::Keyboard::W:
 					m_player.moveStep(NORTH, _level);
 					break;
