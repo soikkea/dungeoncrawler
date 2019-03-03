@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "sprite.h"
+#include "level.h"
 
 Sprite::Sprite() :
 	m_vertices(sf::Quads, 4),
@@ -65,5 +66,13 @@ void Sprite::setWorldPos(int x, int y)
 	this->m_worldX = x;
 	this->m_worldY = y;
 	this->setPosition(sf::Vector2f(x, y) * (float)globals::TILE_SIZE);
+}
+
+void Sprite::setColor(const sf::Color color)
+{
+	m_vertices[0].color = color;
+	m_vertices[1].color = color;
+	m_vertices[2].color = color;
+	m_vertices[3].color = color;
 }
 

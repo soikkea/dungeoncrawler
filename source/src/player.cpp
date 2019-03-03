@@ -3,4 +3,5 @@
 Player::Player(unsigned int x, unsigned int y) :
 	Creature(x, y)
 {
+	setColor(sf::Color::Blue);
 }

@@ -5,6 +5,7 @@ Creature::Creature(unsigned int x, unsigned int y) :
 	_hitPoints(0)
 {
 	setWorldPos(x, y);
+	setColor(sf::Color::Green);
 }
 
 Creature::~Creature()
