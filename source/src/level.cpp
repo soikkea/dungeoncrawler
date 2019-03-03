@@ -1,5 +1,6 @@
 #include "level.h"
 #include "globals.h"
+#include "creature.h"
 
 
 bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, unsigned int height)
@@ -74,6 +75,19 @@ void Level::tmpInit()
 	};
 
 	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, 8, 5);
+
+	// Temporary
+	for (int i = 0; i < _tiles.size(); i++)
+	{
+		int tile = _tiles[i];
+		if (tile == EMPTY)
+		{
+			int x = i % _width;
+			int y = i / _width;
+			_creatures.push_back(std::shared_ptr<Creature>(new Creature(x, y)));
+			break;
+		}
+	}
 }
 
 const sf::Vector2u Level::getPlayerStartingPos() const
@@ -86,6 +100,11 @@ bool Level::isEmpty(unsigned int x, unsigned int y) const
 	if (x >= _width || y >= _height) return false;
 	int tile = getTile(x, y);
 	if (tile == Level::WALL) return false;
+	for (auto& creature : _creatures)
+	{
+		sf::Vector2i creaturePos = creature->getWorldPos();
+		if (creaturePos.x == x && creaturePos.y == y) return false;
+	}
 	return true;
 }
 
@@ -101,4 +120,9 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 	// Draw the vertex array
 	target.draw(_vertices, states);
+
+	for (int i = 0; i < _creatures.size(); i++)
+	{
+		_creatures.at(i)->draw(target, states);
+	}
 }

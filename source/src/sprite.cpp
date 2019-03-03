@@ -68,6 +68,11 @@ void Sprite::setWorldPos(int x, int y)
 	this->setPosition(sf::Vector2f(x, y) * (float)globals::TILE_SIZE);
 }
 
+const sf::Vector2i Sprite::getWorldPos() const
+{
+	return sf::Vector2i(m_worldX, m_worldY);
+}
+
 void Sprite::setColor(const sf::Color color)
 {
 	m_vertices[0].color = color;

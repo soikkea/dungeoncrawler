@@ -4,6 +4,8 @@
 
 #include <SFML/Graphics.hpp>
 
+class Creature;
+
 class Level : public sf::Drawable, public sf::Transformable {
 public:
 	static const int EMPTY = 0;
@@ -22,4 +24,5 @@ private:
 	unsigned int _height;
 	std::vector<int> _tiles;
 	sf::Vector2u _playerStartingPos;
+	std::vector<std::shared_ptr<Creature>> _creatures;
 };
