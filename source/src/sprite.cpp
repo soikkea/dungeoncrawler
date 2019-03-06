@@ -30,6 +30,16 @@ void Sprite::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(m_vertices, states);
 }
 
+/*
+ * Return the center point of the sprite in world coordinates
+ */
+const sf::Vector2f Sprite::getWorldCenter() const
+{
+	sf::Vector2f position = getPosition();
+	const float centerOffset = ((float)globals::TILE_SIZE * 0.5f);
+	return position + sf::Vector2f(centerOffset, centerOffset);
+}
+
 void Sprite::moveStep(Direction direction, int steps)
 {
 	switch (direction)

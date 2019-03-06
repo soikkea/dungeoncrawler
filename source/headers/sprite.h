@@ -16,6 +16,7 @@ public:
 	const sf::Vector2i getTilePos() const;
 	void setColor(const sf::Color color);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	const sf::Vector2f getWorldCenter() const;
 protected:
 	sf::VertexArray m_vertices;
 	int _tileX;

@@ -69,6 +69,12 @@ void Game::gameLoop() {
 
 void Game::draw() {
 	m_window->clear();
+
+	// Center window on player
+	sf::View view = m_window->getDefaultView();
+	view.setCenter(m_player.getWorldCenter());
+	m_window->setView(view);
+
 	m_window->draw(_level);
 	m_window->draw(m_player);
 	m_window->display();
