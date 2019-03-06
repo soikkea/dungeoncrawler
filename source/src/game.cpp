@@ -14,7 +14,7 @@ Game::Game() :
 	auto playerPos = _level.getPlayerStartingPos();
 
 	// PLACEHOLDER: init player
-	m_player.setWorldPos(playerPos.x, playerPos.y);
+	m_player.setTilePos(playerPos.x, playerPos.y);
 
 	this->gameLoop();
 }

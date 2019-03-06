@@ -102,7 +102,7 @@ bool Level::isEmpty(unsigned int x, unsigned int y) const
 	if (tile == Level::WALL) return false;
 	for (auto& creature : _creatures)
 	{
-		sf::Vector2i creaturePos = creature->getWorldPos();
+		sf::Vector2i creaturePos = creature->getTilePos();
 		if (creaturePos.x == x && creaturePos.y == y) return false;
 	}
 	return true;

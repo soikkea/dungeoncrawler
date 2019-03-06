@@ -4,8 +4,8 @@
 
 Sprite::Sprite() :
 	m_vertices(sf::Quads, 4),
-	m_worldX(0),
-	m_worldY(0)
+	_tileX(0),
+	_tileY(0)
 {
 	const float grid_size = (float)globals::TILE_SIZE;
 	m_vertices[0].position = sf::Vector2f(0.f, 0.f);
@@ -30,47 +30,47 @@ void Sprite::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(m_vertices, states);
 }
 
-void Sprite::worldMove(Direction direction, int steps)
+void Sprite::moveStep(Direction direction, int steps)
 {
 	switch (direction)
 	{
 	case NORTH:
-		this->m_worldY -= steps;
+		this->_tileY -= steps;
 		break;
 	case EAST:
-		this->m_worldX += steps;
+		this->_tileX += steps;
 		break;
 	case SOUTH:
-		this->m_worldY += steps;
+		this->_tileY += steps;
 		break;
 	case WEST:
-		this->m_worldX -= steps;
+		this->_tileX -= steps;
 		break;
 	default:
 		break;
 	}
-	this->setPosition(sf::Vector2f(m_worldX, m_worldY) * (float)globals::TILE_SIZE);
+	this->setPosition(sf::Vector2f(_tileX, _tileY) * (float)globals::TILE_SIZE);
 }
 
 void Sprite::moveStep(Direction direction, const Level & level)
 {
 	sf::Vector2i directionVector = getDirectionUnitVector(direction);
-	int newX = m_worldX + directionVector.x;
-	int newY = m_worldY + directionVector.y;
+	int newX = _tileX + directionVector.x;
+	int newY = _tileY + directionVector.y;
 	if (!level.isEmpty(newX, newY)) return;
-	setWorldPos(newX, newY);
+	setTilePos(newX, newY);
 }
 
-void Sprite::setWorldPos(int x, int y)
+void Sprite::setTilePos(int x, int y)
 {
-	this->m_worldX = x;
-	this->m_worldY = y;
+	this->_tileX = x;
+	this->_tileY = y;
 	this->setPosition(sf::Vector2f(x, y) * (float)globals::TILE_SIZE);
 }
 
-const sf::Vector2i Sprite::getWorldPos() const
+const sf::Vector2i Sprite::getTilePos() const
 {
-	return sf::Vector2i(m_worldX, m_worldY);
+	return sf::Vector2i(_tileX, _tileY);
 }
 
 void Sprite::setColor(const sf::Color color)

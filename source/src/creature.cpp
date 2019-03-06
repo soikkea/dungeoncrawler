@@ -4,7 +4,7 @@ Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(0),
 	_hitPoints(0)
 {
-	setWorldPos(x, y);
+	setTilePos(x, y);
 	setColor(sf::Color::Green);
 }
 
