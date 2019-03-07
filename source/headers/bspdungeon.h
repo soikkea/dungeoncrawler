@@ -8,7 +8,7 @@ class BSPDungeon
 {
 public:
 	BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<std::vector<int>> map);
-	static BSPDungeon generateDungeon(int width, int height, int depth);
+	static std::shared_ptr<BSPDungeon> generateDungeon(int width, int height, int depth);
 	void split();
 	void connect();
 	void generateRoom();
