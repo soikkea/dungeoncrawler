@@ -4,7 +4,27 @@
 #include "bspdungeon.h"
 #include "level.h"
 
-BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<std::vector<int>> map) :
+template<typename T>
+Map2D<T>::Map2D(int width, int height, T initValue) :
+	width(width),
+	height(height),
+	map(std::vector<T>(width * height, initValue))
+{
+}
+
+template<typename T>
+void Map2D<T>::setValueAt(int x, int y, T value)
+{
+	map.at(x + y * width) = value;
+}
+
+template<typename T>
+T Map2D<T>::getValueAt(int x, int y)
+{
+	return map.at(x + y * width);
+}
+
+BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<int>> map) :
 	leftChild(),
 	rightChild(),
 	map(map),
@@ -15,7 +35,7 @@ BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<std::vecto
 std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
 {
 	int mapSize = width * height;
-	std::shared_ptr<std::vector<int>> map(new std::vector<int>(mapSize, Level::EMPTY));
+	auto map = std::make_shared<Map2D<int>>(width, height, Level::EMPTY);
 	sf::Rect<unsigned int> limits(0, 0, width, height);
 	auto root = std::make_shared<BSPDungeon>(limits, map);
 	std::queue<std::shared_ptr<BSPDungeon>> nodeQueue;
