@@ -1,6 +1,7 @@
 #include "level.h"
 #include "globals.h"
 #include "creature.h"
+#include "bspdungeon.h"
 
 
 bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, unsigned int height)
@@ -65,16 +66,25 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 
 void Level::tmpInit()
 {
-	const int level[] =
-	{
-		1, 1, 1, 1, 1, 1, 1, 1,
-		1, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 2, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 1,
-		1, 1, 1, 1, 1, 1, 1, 1,
-	};
+	// Placeholder function for initializing the level
+	auto dungeon = BSPDungeon::generateDungeon(10, 10, 0);
 
-	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, 8, 5);
+	auto map = dungeon->getMap();
+
+	const int mapSize = map->map.size();
+
+	int* level = new int[mapSize];
+
+	for (int i = 0; i < mapSize; i++)
+	{
+		level[i] = map->map[i];
+	}
+
+	level[3 + 3 * map->width] = Level::PLAYER;
+
+	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, 10, 10);
+
+	delete level;
 
 	// Temporary
 	for (int i = 0; i < _tiles.size(); i++)
