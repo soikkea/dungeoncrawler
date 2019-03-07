@@ -22,9 +22,11 @@ public:
 	void split();
 	void connect();
 	void generateRoom();
+	std::shared_ptr<Map2D<int>> getMap();
 protected:
 	std::shared_ptr<BSPDungeon> leftChild;
 	std::shared_ptr<BSPDungeon> rightChild;
 	std::shared_ptr<Map2D<int>> map;
-	sf::Rect<int> room;
+	sf::Rect<unsigned int> limits;
+	sf::Rect<unsigned int> room;
 };

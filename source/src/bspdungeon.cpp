@@ -28,6 +28,7 @@ BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<int>
 	leftChild(),
 	rightChild(),
 	map(map),
+	limits(limits),
 	room(limits)
 {
 }
@@ -60,6 +61,11 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	}
 	
 	// Generate rooms for the leafs
+	while (!nodeQueue.empty())
+	{
+		nodeQueue.front()->generateRoom();
+		nodeQueue.pop();
+	}
 
 	// Connect the nodes depth-first
 
@@ -94,4 +100,30 @@ void BSPDungeon::generateRoom()
 {
 	// Generate room inside the node.
 
+	// PLACEHOLDER
+	auto right = limits.left + limits.width;
+	auto bottom = limits.top + limits.height;
+	for (auto x = limits.left; x < right; x++)
+	{
+		for (auto y = limits.top; y < bottom; y++)
+		{
+			// Border
+			if (
+				y == limits.top || y == bottom - 1 ||
+				x == limits.left || x == right - 1
+				)
+			{
+				map->setValueAt(x, y, Level::WALL);
+			}
+			else
+			{
+				map->setValueAt(x, y, Level::EMPTY);
+			}
+		}
+	}
+}
+
+std::shared_ptr<Map2D<int>> BSPDungeon::getMap()
+{
+	return map;
 }
