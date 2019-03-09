@@ -67,7 +67,7 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 void Level::tmpInit()
 {
 	// Placeholder function for initializing the level
-	auto dungeon = BSPDungeon::generateDungeon(10, 10, 0);
+	auto dungeon = BSPDungeon::generateDungeon(20, 20, 2);
 
 	auto map = dungeon->getMap();
 
@@ -82,7 +82,7 @@ void Level::tmpInit()
 
 	level[3 + 3 * map->width] = Level::PLAYER;
 
-	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, 10, 10);
+	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, 20, 20);
 
 	delete level;
 

@@ -3,6 +3,7 @@
 
 #include "bspdungeon.h"
 #include "level.h"
+#include "rng.h"
 
 template<typename T>
 Map2D<T>::Map2D(int width, int height, T initValue) :
@@ -77,10 +78,47 @@ void BSPDungeon::split()
 	// Create children for the node
 
 	// Pick random direction
+	// 0 = vertical, 1 = horizontal
+	int direction = random::randomInt(1);
+
+	int a, b, splitPos, length, splitLength;
 
 	// Pick random position for split
+	if (direction == 0)
+	{
+		// Vertical split
+		length = limits.width;
+		splitPos = limits.left;
+	}
+	else 
+	{
+		// Horizontal split
+		length = limits.height;
+		splitPos = limits.top;
+	}
+
+	a = (int) (0.45f * length);
+	b = (int) (0.55f * length);
+
+	splitLength = random::randomIntBetween(a, b);
+	splitPos += splitLength;
+
+	sf::Rect<unsigned int> leftLimits, rightLimits;
+
+	if (direction == 0)
+	{
+		leftLimits =  sf::Rect<unsigned int>(limits.left, limits.top, splitLength, limits.height);
+		rightLimits = sf::Rect<unsigned int>(splitPos, limits.top, length - splitLength, limits.height);
+	}
+	else
+	{
+		leftLimits = sf::Rect<unsigned int>(limits.left, limits.top, limits.width, splitLength);
+		rightLimits = sf::Rect<unsigned int>(limits.left, splitPos, limits.width, length - splitLength);
+	}
 
 	// Create child nodes
+	leftChild = std::make_shared<BSPDungeon>(leftLimits, map);
+	rightChild = std::make_shared<BSPDungeon>(rightLimits, map);
 }
 
 void BSPDungeon::connect()
