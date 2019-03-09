@@ -9,4 +9,5 @@ namespace random {
 	extern std::mt19937 generator;
 
 	int randomInt(int i);
+	int randomIntBetween(int a, int b);
 }
