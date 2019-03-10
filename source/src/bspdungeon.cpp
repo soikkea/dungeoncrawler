@@ -155,7 +155,7 @@ void BSPDungeon::generateRoom()
 			}
 			else
 			{
-				map->setValueAt(x, y, Level::EMPTY);
+				map->setValueAt(x, y, Level::FLOOR);
 			}
 		}
 	}

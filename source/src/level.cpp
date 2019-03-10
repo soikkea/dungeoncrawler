@@ -32,6 +32,9 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 			case Level::EMPTY:
 				tileColor = sf::Color::Black;
 				break;
+			case Level::FLOOR:
+				tileColor = sf::Color::Color(224, 224, 224);
+				break;
 			case Level::WALL:
 				tileColor = sf::Color::White;
 				break;
@@ -86,11 +89,11 @@ void Level::tmpInit()
 
 	delete level;
 
-	// Temporary
+	// Temporary, add NPCs
 	for (int i = 0; i < _tiles.size(); i++)
 	{
 		int tile = _tiles[i];
-		if (tile == EMPTY)
+		if (tile == FLOOR)
 		{
 			int x = i % _width;
 			int y = i / _width;
