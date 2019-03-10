@@ -130,6 +130,41 @@ void BSPDungeon::connect()
 		rightChild->connect();
 
 		// Connect the children
+		if (leftChild->leftChild == nullptr)
+		{
+			// Children are leaves
+			auto & leftRoom = leftChild->room;
+			auto & rightRoom = rightChild->room;
+			int aTop = leftRoom.top;
+			int aLeft = leftRoom.left;
+			int aRight = aLeft + leftRoom.width - 1;
+			int aBottom = aTop + leftRoom.height - 1;
+			int bTop = rightRoom.top;
+			int bLeft = rightRoom.left;
+			int bRight = aLeft + rightRoom.width - 1;
+			int bBottom = aTop + rightRoom.height - 1;
+			
+			/* Possible connections:
+			 * aTop -> bBottom
+			 * aLeft -> bRight
+			 * aBottom -> bTop
+			 * aRight -> bLeft
+			 */
+
+			bool top = aTop < bBottom; // a below b
+			bool left = aLeft > bRight; // a right of b
+			bool bottom = aBottom > bTop; // a above b
+			bool right = aRight < bLeft; // a left of b
+
+
+
+		}
+		else
+		{
+			// Find two rooms, one from each child, that are closest together
+
+			// Connect them
+		}
 	}
 	// Do nothing... 
 }
