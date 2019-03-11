@@ -143,8 +143,8 @@ void BSPDungeon::connect()
 			int aBottom = aTop + leftRoom.height - 1;
 			int bTop = rightRoom.top;
 			int bLeft = rightRoom.left;
-			int bRight = aLeft + rightRoom.width - 1;
-			int bBottom = aTop + rightRoom.height - 1;
+			int bRight = bLeft + rightRoom.width - 1;
+			int bBottom = bTop + rightRoom.height - 1;
 			
 			/* Possible connections:
 			 * aTop -> bBottom
@@ -213,6 +213,72 @@ void BSPDungeon::connect()
 			// Find two rooms, one from each child, that are closest together
 
 			// Connect them
+
+			// TEMP: placeholder implementation, proof of consept
+			auto& leftLimits = leftChild->limits;
+			auto& rightLimits = rightChild->limits;
+			int aTop = leftLimits.top;
+			int aLeft = leftLimits.left;
+			int aRight = aLeft + leftLimits.width - 1;
+			int aBottom = aTop + leftLimits.height - 1;
+			int bTop = rightLimits.top;
+			int bLeft = rightLimits.left;
+			int bRight = bLeft + rightLimits.width - 1;
+			int bBottom = bTop + rightLimits.height - 1;
+
+			if (aTop == bTop)
+			{
+				// A next to B
+				for (int y = aTop; y <= aBottom; y++)
+				{
+					int leftX = aRight;
+					int rightX = bLeft;
+					bool edgesFound = false;
+					while (!edgesFound && (leftX > aLeft && rightX < bRight))
+					{
+						auto leftXValue = map->getValueAt(leftX, y);
+						auto rightXValue = map->getValueAt(rightX, y);
+						if (leftXValue != Level::FLOOR) leftX--;
+						if (rightXValue != Level::FLOOR) rightX++;
+						if (leftXValue == Level::FLOOR && rightXValue == Level::FLOOR) edgesFound = true;
+					}
+					if (edgesFound)
+					{
+						for (int i = leftX; i <= rightX; i++)
+						{
+							map->setValueAt(i, y, Level::FLOOR);
+						}
+						break;
+					}
+				}
+			}
+			else
+			{
+				// A above B
+				for (int x = aLeft; x <= aRight; x++)
+				{
+					int topY = aBottom;
+					int bottomY = bTop;
+					bool edgesFound = false;
+					while (!edgesFound && (topY > aTop && bottomY < bBottom))
+					{
+						auto topYValue = map->getValueAt(x, topY);
+						auto bottomYValue = map->getValueAt(x, bottomY);
+						if (topYValue != Level::FLOOR) topY--;
+						if (bottomYValue != Level::FLOOR) bottomY++;
+						if (topYValue == Level::FLOOR && bottomYValue == Level::FLOOR) edgesFound = true;
+					}
+					if (edgesFound)
+					{
+						for (int i = topY; i <= bottomY; i++)
+						{
+							map->setValueAt(x, i, Level::FLOOR);
+						}
+						break;
+					}
+				}
+			}
+
 		}
 	}
 	// Do nothing... 
