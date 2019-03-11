@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm> // max, min
 #include <SFML/System.hpp>
 
 namespace globals {
@@ -35,4 +36,13 @@ inline sf::Vector2i getDirectionUnitVector(Direction direction) {
 		return sf::Vector2i(0, 0);
 		break;
 	}
+}
+
+inline bool getOverlap(const int a1, const int a2, const int b1, const int b2, int& c, int& d)
+{
+	// a1 < a2 and b1 < b2 required
+	if (a1 > b2 || a2 < b1) return false;
+	c = std::max(a1, b1);
+	d = std::min(a2, b2);
+	return true;
 }
