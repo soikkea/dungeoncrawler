@@ -4,6 +4,7 @@
 #include "bspdungeon.h"
 #include "level.h"
 #include "rng.h"
+#include "globals.h"
 
 template<typename T>
 Map2D<T>::Map2D(int width, int height, T initValue) :
@@ -69,6 +70,7 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	}
 
 	// Connect the nodes depth-first
+	root->connect();
 
 	return root;
 }
@@ -151,12 +153,59 @@ void BSPDungeon::connect()
 			 * aRight -> bLeft
 			 */
 
-			bool top = aTop < bBottom; // a below b
+			bool top = aTop > bBottom; // a below b
 			bool left = aLeft > bRight; // a right of b
-			bool bottom = aBottom > bTop; // a above b
+			bool bottom = aBottom < bTop; // a above b
 			bool right = aRight < bLeft; // a left of b
 
+			int cX, cY, dX, dY;
+			bool xOverlap, yOverlap;
 
+			xOverlap = getOverlap(aLeft, aRight, bLeft, bRight, cX, dX);
+			yOverlap = getOverlap(aTop, aBottom, bTop, bBottom, cY, dY);
+
+			if (xOverlap)
+			{
+				int midX = (cX + dX) / 2;
+				int cStart, cEnd;
+				if (top)
+				{
+					cStart = bBottom;
+					cEnd = aTop;
+				}
+				else
+				{
+					cStart = aBottom;
+					cEnd = bTop;
+				}
+				for (int i = cStart; i <= cEnd; i++)
+				{
+					map->setValueAt(midX, i, Level::FLOOR);
+				}
+			}
+			else if (yOverlap)
+			{
+				int midY = (cY + dY) / 2;
+				int cStart, cEnd;
+				if (right)
+				{
+					cStart = aRight;
+					cEnd = bLeft;
+				}
+				else
+				{
+					cStart = bRight;
+					cEnd = aLeft;
+				}
+				for (int i = cStart; i <= cEnd; i++)
+				{
+					map->setValueAt(i, midY, Level::FLOOR);
+				}
+			}
+			else
+			{
+				// TODO: No overlap
+			}
 
 		}
 		else
