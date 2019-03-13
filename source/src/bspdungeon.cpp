@@ -81,18 +81,23 @@ void BSPDungeon::split()
 
 	// Pick random direction
 	// 0 = vertical, 1 = horizontal
-	int direction = random::randomInt(1);
+	enum SplitDir {
+		VERTICAL=0,
+		HORIZONTAL=1
+	};
+
+	SplitDir direction = (SplitDir) random::randomInt(1);
 
 	int a, b, splitPos, length, splitLength;
 
 	// Pick random position for split
-	if (direction == 0)
+	if (direction == VERTICAL)
 	{
 		// Vertical split
 		length = limits.width;
 		splitPos = limits.left;
 	}
-	else 
+	else if (direction == HORIZONTAL)
 	{
 		// Horizontal split
 		length = limits.height;
@@ -107,12 +112,12 @@ void BSPDungeon::split()
 
 	sf::Rect<unsigned int> leftLimits, rightLimits;
 
-	if (direction == 0)
+	if (direction == VERTICAL)
 	{
 		leftLimits =  sf::Rect<unsigned int>(limits.left, limits.top, splitLength, limits.height);
 		rightLimits = sf::Rect<unsigned int>(splitPos, limits.top, length - splitLength, limits.height);
 	}
-	else
+	else if (direction == HORIZONTAL)
 	{
 		leftLimits = sf::Rect<unsigned int>(limits.left, limits.top, limits.width, splitLength);
 		rightLimits = sf::Rect<unsigned int>(limits.left, splitPos, limits.width, length - splitLength);
