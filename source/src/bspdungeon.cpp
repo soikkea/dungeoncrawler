@@ -293,17 +293,32 @@ void BSPDungeon::generateRoom()
 {
 	// Generate room inside the node.
 
-	// PLACEHOLDER
+	const int MAX_ROOM_SIZE = 6;
+
+	auto top = limits.top;
+	auto left = limits.left;
 	auto right = limits.left + limits.width;
 	auto bottom = limits.top + limits.height;
-	for (auto x = limits.left; x < right; x++)
+
+	if (limits.width > MAX_ROOM_SIZE && limits.height > MAX_ROOM_SIZE)
 	{
-		for (auto y = limits.top; y < bottom; y++)
+		auto width = random::randomIntBetween(MAX_ROOM_SIZE, limits.width);
+		auto height = random::randomIntBetween(MAX_ROOM_SIZE, limits.height);
+		top = random::randomIntBetween(top, bottom - height);
+		left = random::randomIntBetween(left, right - width);
+		right = left + width;
+		bottom = top + height;
+		room = sf::Rect<unsigned int>(top, left, width, height);
+	}
+
+	for (auto x = left; x < right; x++)
+	{
+		for (auto y = top; y < bottom; y++)
 		{
 			// Border
 			if (
-				y == limits.top || y == bottom - 1 ||
-				x == limits.left || x == right - 1
+				y == top || y == bottom - 1 ||
+				x == left || x == right - 1
 				)
 			{
 				map->setValueAt(x, y, Level::WALL);
