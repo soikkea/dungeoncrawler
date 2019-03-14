@@ -219,6 +219,7 @@ void BSPDungeon::connect()
 			else
 			{
 				// TODO: No overlap
+				assert(true);
 			}
 
 		}
@@ -231,67 +232,8 @@ void BSPDungeon::connect()
 			// TEMP: placeholder implementation, proof of consept
 			auto& leftLimits = leftChild->limits;
 			auto& rightLimits = rightChild->limits;
-			int aTop = leftLimits.top;
-			int aLeft = leftLimits.left;
-			int aRight = aLeft + leftLimits.width - 1;
-			int aBottom = aTop + leftLimits.height - 1;
-			int bTop = rightLimits.top;
-			int bLeft = rightLimits.left;
-			int bRight = bLeft + rightLimits.width - 1;
-			int bBottom = bTop + rightLimits.height - 1;
-
-			if (aTop == bTop)
-			{
-				// A next to B
-				for (int y = aTop; y <= aBottom; y++)
-				{
-					int leftX = aRight;
-					int rightX = bLeft;
-					bool edgesFound = false;
-					while (!edgesFound && (leftX > aLeft && rightX < bRight))
-					{
-						auto leftXValue = map->getValueAt(leftX, y);
-						auto rightXValue = map->getValueAt(rightX, y);
-						if (leftXValue != Level::FLOOR) leftX--;
-						if (rightXValue != Level::FLOOR) rightX++;
-						if (leftXValue == Level::FLOOR && rightXValue == Level::FLOOR) edgesFound = true;
-					}
-					if (edgesFound)
-					{
-						for (int i = leftX; i <= rightX; i++)
-						{
-							map->setValueAt(i, y, Level::FLOOR);
-						}
-						break;
-					}
-				}
-			}
-			else
-			{
-				// A above B
-				for (int x = aLeft; x <= aRight; x++)
-				{
-					int topY = aBottom;
-					int bottomY = bTop;
-					bool edgesFound = false;
-					while (!edgesFound && (topY > aTop && bottomY < bBottom))
-					{
-						auto topYValue = map->getValueAt(x, topY);
-						auto bottomYValue = map->getValueAt(x, bottomY);
-						if (topYValue != Level::FLOOR) topY--;
-						if (bottomYValue != Level::FLOOR) bottomY++;
-						if (topYValue == Level::FLOOR && bottomYValue == Level::FLOOR) edgesFound = true;
-					}
-					if (edgesFound)
-					{
-						for (int i = topY; i <= bottomY; i++)
-						{
-							map->setValueAt(x, i, Level::FLOOR);
-						}
-						break;
-					}
-				}
-			}
+			
+			connectNodes(leftLimits, rightLimits);
 
 		}
 	}
@@ -343,4 +285,80 @@ void BSPDungeon::generateRoom()
 std::shared_ptr<Map2D<int>> BSPDungeon::getMap()
 {
 	return map;
+}
+
+// Connect two non-leaf nodes
+bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf::Rect<unsigned int>& rightLimits)
+{
+	bool edgesFound = false;
+	int aTop = leftLimits.top;
+	int aLeft = leftLimits.left;
+	int aRight = aLeft + leftLimits.width - 1;
+	int aBottom = aTop + leftLimits.height - 1;
+	int bTop = rightLimits.top;
+	int bLeft = rightLimits.left;
+	int bRight = bLeft + rightLimits.width - 1;
+	int bBottom = bTop + rightLimits.height - 1;
+
+	const enum Orientation
+	{
+		HORIZONTAL,
+		VERTICAL
+	};
+
+	// Is the border between the nodes vertical or horizontal?
+	auto orient = (aTop == bTop) ? VERTICAL : HORIZONTAL;
+
+	int iStart = (orient == VERTICAL) ? aTop    : aLeft;
+	int iEnd   = (orient == VERTICAL) ? aBottom : aRight;
+
+	int aStart = (orient == VERTICAL) ? aRight  : aBottom;
+	int aEnd   = (orient == VERTICAL) ? aLeft   : aTop;
+	int bStart = (orient == VERTICAL) ? bLeft   : bTop;
+	int bEnd   = (orient == VERTICAL) ? bRight  : bBottom;
+
+	for (auto i = iStart; i <= iEnd; i++)
+	{
+		int a = aStart;
+		int b = bStart;
+		// Find a row/column that connects the nodes
+		while (!edgesFound && (a > aEnd && b < bEnd))
+		{
+			int aValue, bValue;
+			if (orient == VERTICAL)
+			{
+				aValue = map->getValueAt(a, i);
+				bValue = map->getValueAt(b, i);
+			}
+			else
+			{
+				aValue = map->getValueAt(i, a);
+				bValue = map->getValueAt(i, b);
+			}
+			if (aValue != Level::FLOOR) a--;
+			if (bValue != Level::FLOOR) b++;
+			if (aValue == Level::FLOOR && bValue == Level::FLOOR) edgesFound = true;
+		}
+		// Create corridor to the selected row/column.
+		if (edgesFound)
+		{
+			if (orient == VERTICAL)
+			{
+				for (int x = a; x <= b; x++)
+				{
+					map->setValueAt(x, i, Level::FLOOR);
+				}
+			}
+			else
+			{
+				for (int y = a; y <= b; y++)
+				{
+					map->setValueAt(i, y, Level::FLOOR);
+				}
+			}
+			break;
+		}
+	}
+
+	return edgesFound;
 }

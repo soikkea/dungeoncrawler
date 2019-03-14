@@ -24,6 +24,7 @@ public:
 	void generateRoom();
 	std::shared_ptr<Map2D<int>> getMap();
 protected:
+	bool connectNodes(const sf::Rect<unsigned int> & leftLimits, const sf::Rect<unsigned int> & rightLimits);
 	std::shared_ptr<BSPDungeon> leftChild;
 	std::shared_ptr<BSPDungeon> rightChild;
 	std::shared_ptr<Map2D<int>> map;
