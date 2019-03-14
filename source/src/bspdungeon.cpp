@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <queue>
 #include <memory>
 
@@ -169,9 +171,13 @@ void BSPDungeon::connect()
 			xOverlap = getOverlap(aLeft, aRight, bLeft, bRight, cX, dX);
 			yOverlap = getOverlap(aTop, aBottom, bTop, bBottom, cY, dY);
 
+			
+
 			if (xOverlap)
 			{
 				int midX = (cX + dX) / 2;
+				assert(map->getValueAt(midX, aTop) != Level::EMPTY);
+				assert(map->getValueAt(midX, bBottom) != Level::EMPTY);
 				int cStart, cEnd;
 				if (top)
 				{
@@ -185,12 +191,15 @@ void BSPDungeon::connect()
 				}
 				for (int i = cStart; i <= cEnd; i++)
 				{
+					assert(map->getValueAt(midX, i) != Level::FLOOR);
 					map->setValueAt(midX, i, Level::FLOOR);
 				}
 			}
 			else if (yOverlap)
 			{
 				int midY = (cY + dY) / 2;
+				assert(map->getValueAt(aRight, midY) != Level::EMPTY);
+				assert(map->getValueAt(bLeft, midY) != Level::EMPTY);
 				int cStart, cEnd;
 				if (right)
 				{
@@ -308,7 +317,7 @@ void BSPDungeon::generateRoom()
 		left = random::randomIntBetween(left, right - width);
 		right = left + width;
 		bottom = top + height;
-		room = sf::Rect<unsigned int>(top, left, width, height);
+		room = sf::Rect<unsigned int>(left, top, width, height);
 	}
 
 	for (auto x = left; x < right; x++)
