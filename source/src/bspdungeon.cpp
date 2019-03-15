@@ -309,16 +309,37 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 	// Is the border between the nodes vertical or horizontal?
 	auto orient = (aTop == bTop) ? VERTICAL : HORIZONTAL;
 
+	// Loop over the map either vertically or horizontally
 	int iStart = (orient == VERTICAL) ? aTop    : aLeft;
 	int iEnd   = (orient == VERTICAL) ? aBottom : aRight;
 
+	// Loop over every row/column, starting from the center outwards
 	int aStart = (orient == VERTICAL) ? aRight  : aBottom;
 	int aEnd   = (orient == VERTICAL) ? aLeft   : aTop;
 	int bStart = (orient == VERTICAL) ? bLeft   : bTop;
 	int bEnd   = (orient == VERTICAL) ? bRight  : bBottom;
 
-	for (auto i = iStart; i <= iEnd; i++)
+	int iLeft = (iStart + iEnd) / 2;
+	int iRight = iLeft + 1;
+	bool toggleIDir = true;
+
+	int i;
+
+	// Start searching the row/column from the middle, and then keep changing the search direction
+	while (iLeft >= iStart || iRight <= iEnd)
 	{
+		if (toggleIDir)
+		{
+			i = iLeft;
+			iLeft--;
+			if (iRight <= iEnd) toggleIDir = false;
+		}
+		else
+		{
+			i = iRight;
+			iRight++;
+			if (iLeft >= iStart) toggleIDir = true;
+		}
 		int a = aStart;
 		int b = bStart;
 		// Find a row/column that connects the nodes
