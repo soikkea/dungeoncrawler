@@ -189,11 +189,7 @@ void BSPDungeon::connect()
 					cStart = aBottom;
 					cEnd = bTop;
 				}
-				for (int i = cStart; i <= cEnd; i++)
-				{
-					assert(map->getValueAt(midX, i) != Level::FLOOR);
-					map->setValueAt(midX, i, Level::FLOOR);
-				}
+				createCorridor(midX, cStart - 1, midX, cEnd + 1, 1);
 			}
 			else if (yOverlap)
 			{
@@ -211,10 +207,7 @@ void BSPDungeon::connect()
 					cStart = bRight;
 					cEnd = aLeft;
 				}
-				for (int i = cStart; i <= cEnd; i++)
-				{
-					map->setValueAt(i, midY, Level::FLOOR);
-				}
+				createCorridor(cStart - 1, midY, cEnd + 1, midY, 1);
 			}
 			else
 			{
@@ -280,6 +273,51 @@ void BSPDungeon::generateRoom()
 			}
 		}
 	}
+}
+
+void BSPDungeon::createCorridor(int x1, int y1, int x2, int y2, int width)
+{
+	// Orientation of the corridor
+	bool horizontal = true;
+	if (x1 == x2) horizontal = false;
+	int top = y1, right = x2, bottom = y2, left = x1;
+	if (top > bottom)
+	{
+		top = y2;
+		bottom = y1;
+	}
+	if (left > right)
+	{
+		left = x2;
+		right = x1;
+	}
+	if (horizontal)
+	{
+		top -= width;
+		bottom += width;
+	}
+	else
+	{
+		left -= width;
+		right += width;
+	}
+
+	for (int x = left; x <= right; x++)
+	{
+		for (int y = top; y <= bottom; y++)
+		{
+			if (x == left || x == right || y == top || y == bottom)
+			{
+				if (map->getValueAt(x, y) == Level::EMPTY) map->setValueAt(x, y, Level::WALL);
+			}
+			else
+			{
+				map->setValueAt(x, y, Level::FLOOR);
+			}
+		}
+	}
+
+
 }
 
 std::shared_ptr<Map2D<int>> BSPDungeon::getMap()
@@ -365,17 +403,11 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 		{
 			if (orient == VERTICAL)
 			{
-				for (int x = a; x <= b; x++)
-				{
-					map->setValueAt(x, i, Level::FLOOR);
-				}
+				createCorridor(a, i, b, i, 1);
 			}
 			else
 			{
-				for (int y = a; y <= b; y++)
-				{
-					map->setValueAt(i, y, Level::FLOOR);
-				}
+				createCorridor(i, a, i, b, 1);
 			}
 			break;
 		}

@@ -22,6 +22,7 @@ public:
 	void split();
 	void connect();
 	void generateRoom();
+	void createCorridor(int x1, int y1, int x2, int y2, int width);
 	std::shared_ptr<Map2D<int>> getMap();
 protected:
 	bool connectNodes(const sf::Rect<unsigned int> & leftLimits, const sf::Rect<unsigned int> & rightLimits);
