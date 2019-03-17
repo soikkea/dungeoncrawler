@@ -40,7 +40,7 @@ BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<int>
 std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
 {
 	int mapSize = width * height;
-	auto map = std::make_shared<Map2D<int>>(width, height, Level::EMPTY);
+	auto map = std::make_shared<Map2D<int>>(width, height, static_cast<int>(Level::TileType::EMPTY));
 	sf::Rect<unsigned int> limits(0, 0, width, height);
 	auto root = std::make_shared<BSPDungeon>(limits, map);
 	std::queue<std::shared_ptr<BSPDungeon>> nodeQueue;
@@ -176,8 +176,8 @@ void BSPDungeon::connect()
 			if (xOverlap)
 			{
 				int midX = (cX + dX) / 2;
-				assert(map->getValueAt(midX, aTop) != Level::EMPTY);
-				assert(map->getValueAt(midX, bBottom) != Level::EMPTY);
+				assert(map->getValueAt(midX, aTop) != static_cast<int>(Level::TileType::EMPTY));
+				assert(map->getValueAt(midX, bBottom) != static_cast<int>(Level::TileType::EMPTY));
 				int cStart, cEnd;
 				if (top)
 				{
@@ -194,8 +194,8 @@ void BSPDungeon::connect()
 			else if (yOverlap)
 			{
 				int midY = (cY + dY) / 2;
-				assert(map->getValueAt(aRight, midY) != Level::EMPTY);
-				assert(map->getValueAt(bLeft, midY) != Level::EMPTY);
+				assert(map->getValueAt(aRight, midY) != static_cast<int>(Level::TileType::EMPTY));
+				assert(map->getValueAt(bLeft, midY) != static_cast<int>(Level::TileType::EMPTY));
 				int cStart, cEnd;
 				if (right)
 				{
@@ -265,11 +265,11 @@ void BSPDungeon::generateRoom()
 				x == left || x == right - 1
 				)
 			{
-				map->setValueAt(x, y, Level::WALL);
+				map->setValueAt(x, y, static_cast<int>(Level::TileType::WALL));
 			}
 			else
 			{
-				map->setValueAt(x, y, Level::FLOOR);
+				map->setValueAt(x, y, static_cast<int>(Level::TileType::FLOOR));
 			}
 		}
 	}
@@ -308,11 +308,11 @@ void BSPDungeon::createCorridor(int x1, int y1, int x2, int y2, int width)
 		{
 			if (x == left || x == right || y == top || y == bottom)
 			{
-				if (map->getValueAt(x, y) == Level::EMPTY) map->setValueAt(x, y, Level::WALL);
+				if (map->getValueAt(x, y) == static_cast<int>(Level::TileType::EMPTY)) map->setValueAt(x, y, static_cast<int>(Level::TileType::WALL));
 			}
 			else
 			{
-				map->setValueAt(x, y, Level::FLOOR);
+				map->setValueAt(x, y, static_cast<int>(Level::TileType::FLOOR));
 			}
 		}
 	}
@@ -394,9 +394,10 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 				aValue = map->getValueAt(i, a);
 				bValue = map->getValueAt(i, b);
 			}
-			if (aValue != Level::FLOOR) a--;
-			if (bValue != Level::FLOOR) b++;
-			if (aValue == Level::FLOOR && bValue == Level::FLOOR) edgesFound = true;
+			if (aValue != static_cast<int>(Level::TileType::FLOOR)) a--;
+			if (bValue != static_cast<int>(Level::TileType::FLOOR)) b++;
+			if (aValue == static_cast<int>(Level::TileType::FLOOR) && 
+				bValue == static_cast<int>(Level::TileType::FLOOR)) edgesFound = true;
 		}
 		// Create corridor to the selected row/column.
 		if (edgesFound)

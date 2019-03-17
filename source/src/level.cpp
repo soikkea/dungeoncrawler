@@ -29,16 +29,16 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 			sf::Color tileColor;
 			switch (tileNumber)
 			{
-			case Level::EMPTY:
+			case static_cast<int>(Level::TileType::EMPTY):
 				tileColor = sf::Color::Black;
 				break;
-			case Level::FLOOR:
+			case static_cast<int>(Level::TileType::FLOOR):
 				tileColor = sf::Color::Color(224, 224, 224);
 				break;
-			case Level::WALL:
+			case static_cast<int>(Level::TileType::WALL):
 				tileColor = sf::Color::White;
 				break;
-			case Level::PLAYER:
+			case static_cast<int>(Level::TileType::PLAYER):
 				tileColor = sf::Color::Cyan;
 				_playerStartingPos = sf::Vector2u(i, j);
 				break;
@@ -51,10 +51,10 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 			sf::Vertex* quad = &_vertices[(i + j * width) * 4];
 
 			// Define its 4 corners
-			quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
-			quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-			quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
-			quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
+			quad[0].position = sf::Vector2f((float) (i * tileSize.x),       (float)(j * tileSize.y));
+			quad[1].position = sf::Vector2f((float) ((i + 1) * tileSize.x), (float)(j * tileSize.y));
+			quad[2].position = sf::Vector2f((float) ((i + 1) * tileSize.x), (float)((j + 1) * tileSize.y));
+			quad[3].position = sf::Vector2f((float) (i * tileSize.x),       (float)((j + 1) * tileSize.y));
 
 			// Set the color of the tile
 			quad[0].color = tileColor;
@@ -88,17 +88,17 @@ void Level::tmpInit()
 		level[i] = map->map[i];
 	}
 
-	level[3 + 7 * map->width] = Level::PLAYER;
+	level[3 + 7 * map->width] = static_cast<int>(Level::TileType::PLAYER);
 
 	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, WIDTH, HEIGHT);
 
 	delete level;
 
 	// Temporary, add NPCs
-	for (int i = 0; i < _tiles.size(); i++)
+	for (unsigned int i = 0; i < _tiles.size(); i++)
 	{
 		int tile = _tiles[i];
-		if (tile == FLOOR)
+		if (tile == static_cast<int>(TileType::FLOOR))
 		{
 			int x = i % _width;
 			int y = i / _width;
@@ -117,7 +117,7 @@ bool Level::isEmpty(unsigned int x, unsigned int y) const
 {
 	if (x >= _width || y >= _height) return false;
 	int tile = getTile(x, y);
-	if (tile == Level::WALL) return false;
+	if (tile == static_cast<int>(Level::TileType::WALL)) return false;
 	for (auto& creature : _creatures)
 	{
 		sf::Vector2i creaturePos = creature->getTilePos();
@@ -139,7 +139,7 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	// Draw the vertex array
 	target.draw(_vertices, states);
 
-	for (int i = 0; i < _creatures.size(); i++)
+	for (unsigned int i = 0; i < _creatures.size(); i++)
 	{
 		_creatures.at(i)->draw(target, states);
 	}

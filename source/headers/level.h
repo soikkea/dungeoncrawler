@@ -8,10 +8,13 @@ class Creature;
 
 class Level : public sf::Drawable, public sf::Transformable {
 public:
-	static const int EMPTY = 0;
-	static const int FLOOR = 1;
-	static const int WALL = 2;
-	static const int PLAYER = 3;
+	enum class TileType 
+	{
+		EMPTY = 0,
+		FLOOR,
+		WALL,
+		PLAYER,
+	};
 	bool load(sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height);
 	void tmpInit();
 	const sf::Vector2u getPlayerStartingPos() const;
