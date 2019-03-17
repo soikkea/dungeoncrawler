@@ -59,7 +59,7 @@ void Sprite::moveStep(Direction direction, int steps)
 	default:
 		break;
 	}
-	this->setPosition(sf::Vector2f(_tileX, _tileY) * (float)globals::TILE_SIZE);
+	this->setPosition(sf::Vector2f((float)_tileX, (float)_tileY) * (float)globals::TILE_SIZE);
 }
 
 void Sprite::moveStep(Direction direction, const Level & level)
@@ -75,7 +75,7 @@ void Sprite::setTilePos(int x, int y)
 {
 	this->_tileX = x;
 	this->_tileY = y;
-	this->setPosition(sf::Vector2f(x, y) * (float)globals::TILE_SIZE);
+	this->setPosition(sf::Vector2f((float)x, (float)y) * (float)globals::TILE_SIZE);
 }
 
 const sf::Vector2i Sprite::getTilePos() const

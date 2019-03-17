@@ -106,6 +106,9 @@ void Level::tmpInit()
 			break;
 		}
 	}
+
+	// TODO: Do this differently
+	_rooms = map->rooms;
 }
 
 const sf::Vector2u Level::getPlayerStartingPos() const

@@ -28,7 +28,7 @@ T Map2D<T>::getValueAt(int x, int y)
 	return map.at(x + y * width);
 }
 
-BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<int>> map) :
+BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<unsigned int>> map) :
 	leftChild(),
 	rightChild(),
 	map(map),
@@ -40,7 +40,7 @@ BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<int>
 std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
 {
 	int mapSize = width * height;
-	auto map = std::make_shared<Map2D<int>>(width, height, static_cast<int>(Level::TileType::EMPTY));
+	auto map = std::make_shared<Map2D<unsigned int>>(width, height, static_cast<int>(Level::TileType::EMPTY));
 	sf::Rect<unsigned int> limits(0, 0, width, height);
 	auto root = std::make_shared<BSPDungeon>(limits, map);
 	std::queue<std::shared_ptr<BSPDungeon>> nodeQueue;
@@ -273,6 +273,8 @@ void BSPDungeon::generateRoom()
 			}
 		}
 	}
+
+	map->rooms.push_back(room);
 }
 
 void BSPDungeon::createCorridor(int x1, int y1, int x2, int y2, int width)
@@ -320,7 +322,7 @@ void BSPDungeon::createCorridor(int x1, int y1, int x2, int y2, int width)
 
 }
 
-std::shared_ptr<Map2D<int>> BSPDungeon::getMap()
+std::shared_ptr<Map2D<unsigned int>> BSPDungeon::getMap()
 {
 	return map;
 }

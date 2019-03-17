@@ -29,4 +29,5 @@ private:
 	std::vector<int> _tiles;
 	sf::Vector2u _playerStartingPos;
 	std::vector<std::shared_ptr<Creature>> _creatures;
+	std::vector<sf::Rect<unsigned int>> _rooms;
 };
