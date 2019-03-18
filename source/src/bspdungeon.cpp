@@ -39,7 +39,6 @@ BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<unsi
 
 std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
 {
-	int mapSize = width * height;
 	auto map = std::make_shared<Map2D<unsigned int>>(width, height, static_cast<int>(Level::TileType::EMPTY));
 	sf::Rect<unsigned int> limits(0, 0, width, height);
 	auto root = std::make_shared<BSPDungeon>(limits, map);

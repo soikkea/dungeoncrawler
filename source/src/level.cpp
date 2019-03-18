@@ -4,8 +4,11 @@
 #include "bspdungeon.h"
 
 
-bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, unsigned int height)
+bool Level::load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map)
 {
+	unsigned int width = map.width;
+	unsigned int height = map.height;
+
 	// Resize the vertex array to fit the level size
 	_vertices.setPrimitiveType(sf::Quads);
 	_vertices.resize(width * height * 4);
@@ -21,7 +24,7 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 		for (unsigned int j = 0; j < height; j++)
 		{
 			// Get the current tile number
-			int tileNumber = tiles[i + j * width];
+			int tileNumber = map.map[i + j * width];
 
 			_tiles[i + j * width] = tileNumber;
 
@@ -64,6 +67,9 @@ bool Level::load(sf::Vector2u tileSize, const int * tiles, unsigned int width, u
 		}
 
 	}
+
+	_rooms = map.rooms;
+
 	return true;
 }
 
@@ -79,20 +85,9 @@ void Level::tmpInit()
 
 	auto map = dungeon->getMap();
 
-	const int mapSize = map->map.size();
+	map->setValueAt(3, 7, static_cast<int>(Level::TileType::PLAYER));
 
-	int* level = new int[mapSize];
-
-	for (int i = 0; i < mapSize; i++)
-	{
-		level[i] = map->map[i];
-	}
-
-	level[3 + 7 * map->width] = static_cast<int>(Level::TileType::PLAYER);
-
-	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), level, WIDTH, HEIGHT);
-
-	delete level;
+	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), *map);
 
 	// Temporary, add NPCs
 	for (unsigned int i = 0; i < _tiles.size(); i++)
@@ -106,9 +101,6 @@ void Level::tmpInit()
 			break;
 		}
 	}
-
-	// TODO: Do this differently
-	_rooms = map->rooms;
 }
 
 const sf::Vector2u Level::getPlayerStartingPos() const

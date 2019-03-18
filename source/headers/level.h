@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 class Creature;
+template <typename T> struct Map2D;
 
 class Level : public sf::Drawable, public sf::Transformable {
 public:
@@ -15,7 +16,7 @@ public:
 		WALL,
 		PLAYER,
 	};
-	bool load(sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height);
+	bool load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map);
 	void tmpInit();
 	const sf::Vector2u getPlayerStartingPos() const;
 	bool isEmpty(unsigned int x, unsigned int y) const;
