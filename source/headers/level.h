@@ -21,6 +21,7 @@ public:
 	const sf::Vector2u getPlayerStartingPos() const;
 	bool isEmpty(unsigned int x, unsigned int y) const;
 	int getTile(unsigned int x, unsigned int y) const;
+	void populate();
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

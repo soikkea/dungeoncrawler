@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "creature.h"
 #include "bspdungeon.h"
+#include "rng.h"
 
 
 bool Level::load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map)
@@ -87,18 +88,7 @@ void Level::tmpInit()
 
 	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), *map);
 
-	// Temporary, add NPCs
-	for (unsigned int i = 0; i < _tiles.size(); i++)
-	{
-		int tile = _tiles[i];
-		if (tile == static_cast<int>(TileType::FLOOR))
-		{
-			int x = i % _width;
-			int y = i / _width;
-			_creatures.push_back(std::shared_ptr<Creature>(new Creature(x, y)));
-			break;
-		}
-	}
+	populate();
 }
 
 const sf::Vector2u Level::getPlayerStartingPos() const
@@ -122,6 +112,18 @@ bool Level::isEmpty(unsigned int x, unsigned int y) const
 int Level::getTile(unsigned int x, unsigned int y) const
 {
 	return _tiles.at(x + y * _width);
+}
+
+// Populate the level with NPCs
+void Level::populate()
+{
+	for (int i = 1; i < _rooms.size(); i++)
+	{
+		auto & room = _rooms.at(i);
+		auto x = random::randomIntBetween(room.left + 1, room.left + room.width - 2);
+		auto y = random::randomIntBetween(room.top + 1, room.top + room.height - 2);
+		_creatures.push_back(std::shared_ptr<Creature>(new Creature(x, y)));
+	}
 }
 
 void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
