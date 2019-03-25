@@ -196,7 +196,7 @@ void BSPDungeon::connect()
 					cStart = aBottom;
 					cEnd = bTop;
 				}
-				createCorridor(midX, cStart - 1, midX, cEnd + 1, 1);
+				createCorridor(midX, cStart - 1, midX, cEnd + 1, CORRIDOR_WIDTH);
 			}
 			else if (yOverlap)
 			{
@@ -214,12 +214,20 @@ void BSPDungeon::connect()
 					cStart = bRight;
 					cEnd = aLeft;
 				}
-				createCorridor(cStart - 1, midY, cEnd + 1, midY, 1);
+				createCorridor(cStart - 1, midY, cEnd + 1, midY, CORRIDOR_WIDTH);
 			}
 			else
 			{
-				// TODO: No overlap
-				assert(true);
+				int aXMid = (aLeft + aRight) / 2;
+				int aYMid = (aTop + aBottom) / 2;
+				int bXMid = (bLeft + bRight) / 2;
+				int bYMid = (bTop + bBottom) / 2;
+
+				// Offset for the corridors so that they overlap.
+				int offset = aYMid < bYMid ? -1 : 1;
+				createCorridor(aXMid, aYMid, bXMid, aYMid, CORRIDOR_WIDTH);
+				createCorridor(bXMid, aYMid + offset, bXMid, bYMid, CORRIDOR_WIDTH);
+				assert(map->getValueAt(bXMid, aYMid) == static_cast<int>(Level::TileType::FLOOR));
 			}
 
 		}
@@ -409,11 +417,11 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 		{
 			if (orient == VERTICAL)
 			{
-				createCorridor(a, i, b, i, 1);
+				createCorridor(a, i, b, i, CORRIDOR_WIDTH);
 			}
 			else
 			{
-				createCorridor(i, a, i, b, 1);
+				createCorridor(i, a, i, b, CORRIDOR_WIDTH);
 			}
 			break;
 		}

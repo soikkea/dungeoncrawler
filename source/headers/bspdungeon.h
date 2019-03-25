@@ -18,6 +18,7 @@ template <typename T> struct Map2D
 class BSPDungeon
 {
 public:
+	static const int CORRIDOR_WIDTH = 1;
 	BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<unsigned int>> map);
 	static std::shared_ptr<BSPDungeon> generateDungeon(int width, int height, int depth);
 	void split();
