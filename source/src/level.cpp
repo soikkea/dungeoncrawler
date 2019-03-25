@@ -85,8 +85,6 @@ void Level::tmpInit()
 
 	auto map = dungeon->getMap();
 
-	map->setValueAt(3, 7, static_cast<int>(Level::TileType::PLAYER));
-
 	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), *map);
 
 	// Temporary, add NPCs

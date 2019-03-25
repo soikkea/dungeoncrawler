@@ -73,6 +73,14 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	// Connect the nodes depth-first
 	root->connect();
 
+	// Add starting position for the player
+	auto & room = map->rooms[0];
+
+	auto x = random::randomIntBetween(room.left + 1, room.left + room.width - 1);
+	auto y = random::randomIntBetween(room.top + 1, room.top + room.height - 1);
+
+	map->setValueAt(x, y, static_cast<unsigned int>(Level::TileType::PLAYER));
+
 	return root;
 }
 
@@ -217,11 +225,7 @@ void BSPDungeon::connect()
 		}
 		else
 		{
-			// Find two rooms, one from each child, that are closest together
 
-			// Connect them
-
-			// TEMP: placeholder implementation, proof of consept
 			auto& leftLimits = leftChild->limits;
 			auto& rightLimits = rightChild->limits;
 			
@@ -234,7 +238,7 @@ void BSPDungeon::connect()
 
 void BSPDungeon::generateRoom()
 {
-	// Generate room inside the node.
+	// Generate a room inside the node.
 
 	const int MAX_ROOM_SIZE = 6;
 
