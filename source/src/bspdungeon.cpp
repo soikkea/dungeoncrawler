@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <memory>
+#include <functional>
 
 #include "bspdungeon.h"
 #include "level.h"
@@ -26,6 +27,12 @@ template<typename T>
 T Map2D<T>::getValueAt(int x, int y)
 {
 	return map.at(x + y * width);
+}
+
+template<typename T>
+T Map2D<T>::getValueAt(sf::Vector2i point)
+{
+	return getValueAt(point.x, point.y);
 }
 
 BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<unsigned int>> map) :
@@ -370,60 +377,66 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 	int bStart = (orient == VERTICAL) ? bLeft   : bTop;
 	int bEnd   = (orient == VERTICAL) ? bRight  : bBottom;
 
-	int iLeft = (iStart + iEnd) / 2;
-	int iRight = iLeft + 1;
-	bool toggleIDir = true;
+	int bestI = -1;
+	int shortestDist = bEnd - aStart;
+	int corridorA, corridorB;
 
-	int i;
+	std::function<sf::Vector2i(int, int)> createVector;
 
-	// Start searching the row/column from the middle, and then keep changing the search direction
-	while (iLeft >= iStart || iRight <= iEnd)
-	{
-		if (toggleIDir)
+	if (orient == VERTICAL) {
+		createVector = [](int i, int ab) { return sf::Vector2i(ab, i); };
+	}
+	else {
+		createVector = [](int i, int ab) { return sf::Vector2i(i, ab); };
+	}
+
+
+	for (int i = iStart; i <= iEnd; i++) {
+		// Loop over all rows/columns
+
+		int aValue = 0;
+		int bValue = 0;
+		int a;
+		for (a = aStart; a >= aEnd; a--) {
+			auto point = createVector(i, a);
+			aValue = map->getValueAt(point);
+			if (aValue == static_cast<int>(Level::TileType::FLOOR)) {
+				break;
+			}
+		}
+		int b;
+		for (b = bStart; b <= bEnd; b++) {
+			auto point = createVector(i, b);
+			bValue = map->getValueAt(point);
+			if (bValue == static_cast<int>(Level::TileType::FLOOR)) {
+				break;
+			}
+		}
+
+		if (aValue == static_cast<int>(Level::TileType::FLOOR) &&
+			bValue == static_cast<int>(Level::TileType::FLOOR))
 		{
-			i = iLeft;
-			iLeft--;
-			if (iRight <= iEnd) toggleIDir = false;
+			int dist = b - a;
+			if (dist < shortestDist) {
+				shortestDist = dist;
+				bestI = i;
+				corridorA = a;
+				corridorB = b;
+				edgesFound = true;
+			}
+		}
+	}
+
+	// Create corridor to the selected row/column.
+	if (edgesFound)
+	{
+		if (orient == VERTICAL)
+		{
+			createCorridor(corridorA, bestI, corridorB, bestI, CORRIDOR_WIDTH);
 		}
 		else
 		{
-			i = iRight;
-			iRight++;
-			if (iLeft >= iStart) toggleIDir = true;
-		}
-		int a = aStart;
-		int b = bStart;
-		// Find a row/column that connects the nodes
-		while (!edgesFound && (a > aEnd && b < bEnd))
-		{
-			int aValue, bValue;
-			if (orient == VERTICAL)
-			{
-				aValue = map->getValueAt(a, i);
-				bValue = map->getValueAt(b, i);
-			}
-			else
-			{
-				aValue = map->getValueAt(i, a);
-				bValue = map->getValueAt(i, b);
-			}
-			if (aValue != static_cast<int>(Level::TileType::FLOOR)) a--;
-			if (bValue != static_cast<int>(Level::TileType::FLOOR)) b++;
-			if (aValue == static_cast<int>(Level::TileType::FLOOR) && 
-				bValue == static_cast<int>(Level::TileType::FLOOR)) edgesFound = true;
-		}
-		// Create corridor to the selected row/column.
-		if (edgesFound)
-		{
-			if (orient == VERTICAL)
-			{
-				createCorridor(a, i, b, i, CORRIDOR_WIDTH);
-			}
-			else
-			{
-				createCorridor(i, a, i, b, CORRIDOR_WIDTH);
-			}
-			break;
+			createCorridor(bestI, corridorA, bestI, corridorB, CORRIDOR_WIDTH);
 		}
 	}
 

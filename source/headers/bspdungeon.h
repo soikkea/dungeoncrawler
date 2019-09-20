@@ -9,6 +9,7 @@ template <typename T> struct Map2D
 	Map2D(int width, int height, T initValue);
 	void setValueAt(int x, int y, T value);
 	T getValueAt(int x, int y);
+	T getValueAt(sf::Vector2i point);
 	int width;
 	int height;
 	std::vector<T> map;
