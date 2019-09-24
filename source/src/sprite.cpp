@@ -40,35 +40,14 @@ const sf::Vector2f Sprite::getWorldCenter() const
 	return position + sf::Vector2f(centerOffset, centerOffset);
 }
 
-void Sprite::moveStep(Direction direction, int steps)
-{
-	switch (direction)
-	{
-	case NORTH:
-		this->_tileY -= steps;
-		break;
-	case EAST:
-		this->_tileX += steps;
-		break;
-	case SOUTH:
-		this->_tileY += steps;
-		break;
-	case WEST:
-		this->_tileX -= steps;
-		break;
-	default:
-		break;
-	}
-	this->setPosition(sf::Vector2f((float)_tileX, (float)_tileY) * (float)globals::TILE_SIZE);
-}
-
-void Sprite::moveStep(Direction direction, const Level & level)
+bool Sprite::moveStep(Direction direction, const Level & level)
 {
 	sf::Vector2i directionVector = getDirectionUnitVector(direction);
 	int newX = _tileX + directionVector.x;
 	int newY = _tileY + directionVector.y;
-	if (!level.isEmpty(newX, newY)) return;
+	if (!level.isEmpty(newX, newY)) return false;
 	setTilePos(newX, newY);
+	return true;
 }
 
 void Sprite::setTilePos(int x, int y)

@@ -10,8 +10,7 @@ class Sprite : public sf::Drawable, public sf::Transformable {
 public:
 	Sprite();
 	virtual ~Sprite();
-	void moveStep(Direction direction, int steps);
-	void moveStep(Direction direction, const Level& level);
+	virtual bool moveStep(Direction direction, const Level& level);
 	void setTilePos(int x, int y);
 	const sf::Vector2i getTilePos() const;
 	void setColor(const sf::Color color);
