@@ -126,6 +126,14 @@ void Level::populate()
 	}
 }
 
+void Level::update()
+{
+	for (auto creature : _creatures)
+	{
+		creature->update(*this);
+	}
+}
+
 void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	// Apply the transform

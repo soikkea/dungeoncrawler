@@ -22,6 +22,7 @@ public:
 	bool isEmpty(unsigned int x, unsigned int y) const;
 	int getTile(unsigned int x, unsigned int y) const;
 	void populate();
+	void update();
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

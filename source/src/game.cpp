@@ -85,4 +85,10 @@ void Game::update(float elapsedTime) {
 	snprintf(buffer, sizeof(buffer), "Dungeoncrawler, FPS=%3.2f", 1.0f/elapsedTime);
 	std::string title = buffer;
 	m_window->setTitle(title);
+
+	if (m_player.isTurnOver()) {
+		_level.update();
+
+		m_player.resetTurn();
+	}
 }

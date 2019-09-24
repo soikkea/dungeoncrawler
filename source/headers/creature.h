@@ -12,6 +12,8 @@ public:
 	const int getMaxHitPoints() const;
 	void gainHitpoints(int amount);
 	virtual bool isAlive() const;
+
+	void update(Level& level);
 protected:
 	int _maxHitPoints;
 	int _hitPoints;
