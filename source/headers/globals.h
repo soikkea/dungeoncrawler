@@ -46,3 +46,7 @@ inline bool getOverlap(const int a1, const int a2, const int b1, const int b2, i
 	d = std::min(a2, b2);
 	return true;
 }
+
+inline int minIntDistance(const sf::Vector2i& a, const sf::Vector2i& b) {
+	return std::min(std::abs(a.x - b.x), std::abs(a.y - b.y));
+}

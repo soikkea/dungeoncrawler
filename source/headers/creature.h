@@ -14,6 +14,8 @@ public:
 	virtual bool isAlive() const;
 
 	void update(Level& level);
+
+	virtual void attackCreature(Creature& target);
 protected:
 	int _maxHitPoints;
 	int _hitPoints;

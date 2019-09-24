@@ -1,9 +1,10 @@
 #include "creature.h"
 #include "rng.h"
+#include "globals.h"
 
 Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(0),
-	_hitPoints(0)
+	_hitPoints(10)
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -35,6 +36,7 @@ bool Creature::isAlive() const
 
 void Creature::update(Level & level)
 {
+	if (!isAlive()) return;
 	int dir = random::randomInt(3);
 	for (int i = 0; i < 4; i++) {
 		auto didMove = moveStep(static_cast<Direction>(dir), level);
@@ -42,5 +44,12 @@ void Creature::update(Level & level)
 			break;
 		}
 		dir = (dir + 1) % 4;
+	}
+}
+
+void Creature::attackCreature(Creature & target)
+{
+	if (minIntDistance(getTilePos(), target.getTilePos()) <= 1) {
+		target.gainHitpoints(-1);
 	}
 }
