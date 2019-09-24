@@ -1,4 +1,6 @@
 #include "player.h"
+#include "level.h"
+#include "globals.h"
 
 Player::Player(unsigned int x, unsigned int y) :
 	Creature(x, y),
@@ -29,4 +31,22 @@ bool Player::moveStep(Direction direction, const Level & level)
 		endTurn();
 	}
 	return retVal;
+}
+
+void Player::moveInput(Direction direction, Level & level)
+{
+	auto retVal = moveStep(direction, level);
+	if (retVal) return;
+
+	auto newPos = getTilePos() + getDirectionUnitVector(direction);
+
+	auto creatures = level.getCreatures();
+	for (auto creature_ptr : creatures)
+	{
+		if (creature_ptr->getTilePos() == newPos) {
+			attackCreature(*creature_ptr);
+			endTurn();
+			return;
+		}
+	}
 }

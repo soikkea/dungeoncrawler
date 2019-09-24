@@ -12,6 +12,7 @@ public:
 	void resetTurn();
 
 	bool moveStep(Direction direction, const Level& level);
+	void moveInput(Direction direction, Level& level);
 private:
 	bool turnOver_;
 };
