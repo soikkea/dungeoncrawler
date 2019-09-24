@@ -120,8 +120,8 @@ void Level::populate()
 	for (int i = 1; i < _rooms.size(); i++)
 	{
 		auto & room = _rooms.at(i);
-		auto x = random::randomIntBetween(room.left + 1, room.left + room.width - 2);
-		auto y = random::randomIntBetween(room.top + 1, room.top + room.height - 2);
+		auto x = random::randomIntBetween(room.left + 2, room.left + room.width - 3);
+		auto y = random::randomIntBetween(room.top + 2, room.top + room.height - 3);
 		_creatures.push_back(std::shared_ptr<Creature>(new Creature(x, y)));
 	}
 }
