@@ -83,8 +83,8 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	// Add starting position for the player
 	auto & room = map->rooms[0];
 
-	auto x = random::randomIntBetween(room.left + 1, room.left + room.width - 1);
-	auto y = random::randomIntBetween(room.top + 1, room.top + room.height - 1);
+	auto x = random::randomIntBetween(room.left + 2, room.left + room.width - 2);
+	auto y = random::randomIntBetween(room.top + 2, room.top + room.height - 2);
 
 	map->setValueAt(x, y, static_cast<unsigned int>(Level::TileType::PLAYER));
 
