@@ -2,6 +2,8 @@
 
 #include "sprite.h"
 
+class Player;
+
 class Creature : public Sprite
 {
 public:
@@ -13,7 +15,7 @@ public:
 	void gainHitpoints(int amount);
 	virtual bool isAlive() const;
 
-	void update(Level& level);
+	void update(Level& level, Player& player);
 
 	virtual void attackCreature(Creature& target);
 protected:

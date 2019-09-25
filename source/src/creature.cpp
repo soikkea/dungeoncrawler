@@ -1,6 +1,7 @@
 #include "creature.h"
 #include "rng.h"
 #include "globals.h"
+#include "player.h"
 
 Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(0),
@@ -34,9 +35,14 @@ bool Creature::isAlive() const
 	return _hitPoints > 0;
 }
 
-void Creature::update(Level & level)
+void Creature::update(Level & level, Player& player)
 {
 	if (!isAlive()) return;
+
+	if (intDistance(getTilePos(), player.playerCreature.getTilePos()) <= 1) {
+		return;
+	}
+
 	int dir = random::randomInt(3);
 	for (int i = 0; i < 4; i++) {
 		auto didMove = moveStep(static_cast<Direction>(dir), level);
@@ -49,7 +55,7 @@ void Creature::update(Level & level)
 
 void Creature::attackCreature(Creature & target)
 {
-	if (minIntDistance(getTilePos(), target.getTilePos()) <= 1) {
+	if (intDistance(getTilePos(), target.getTilePos()) <= 1) {
 		target.gainHitpoints(-1);
 	}
 }

@@ -138,7 +138,7 @@ void Level::update(Player& player)
 	setTile(player.playerCreature.getTilePos(), TileType::WALL);
 	for (auto creature : _creatures)
 	{
-		creature->update(*this);
+		creature->update(*this, player);
 	}
 	setTile(player.playerCreature.getTilePos(), TileType::FLOOR);
 }

@@ -1,6 +1,9 @@
 #pragma once
 
+#include "globals.h"
 #include "creature.h"
+
+class Level;
 
 class Player
 {
