@@ -33,7 +33,7 @@ bool Player::moveStep(Direction direction, const Level & level)
 	return retVal;
 }
 
-void Player::moveInput(Direction direction, Level & level)
+void Player::handleMoveInput(Direction direction, Level & level)
 {
 	auto retVal = moveStep(direction, level);
 	if (retVal) return;
