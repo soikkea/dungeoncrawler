@@ -135,12 +135,12 @@ void Level::populate()
 
 void Level::update(Player& player)
 {
-	setTile(player.getTilePos(), TileType::WALL);
+	setTile(player.playerCreature.getTilePos(), TileType::WALL);
 	for (auto creature : _creatures)
 	{
 		creature->update(*this);
 	}
-	setTile(player.getTilePos(), TileType::FLOOR);
+	setTile(player.playerCreature.getTilePos(), TileType::FLOOR);
 }
 
 std::vector<std::shared_ptr<Creature>> Level::getCreatures()

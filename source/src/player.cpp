@@ -3,10 +3,10 @@
 #include "globals.h"
 
 Player::Player(unsigned int x, unsigned int y) :
-	Creature(x, y),
+	playerCreature(x, y),
 	turnOver_(false)
 {
-	setColor(sf::Color::Blue);
+	playerCreature.setColor(sf::Color::Blue);
 }
 
 bool Player::isTurnOver()
@@ -24,27 +24,21 @@ void Player::resetTurn()
 	turnOver_ = false;
 }
 
-bool Player::moveStep(Direction direction, const Level & level)
-{
-	auto retVal = this->Sprite::moveStep(direction, level);
-	if (retVal) {
-		endTurn();
-	}
-	return retVal;
-}
-
 void Player::handleMoveInput(Direction direction, Level & level)
 {
-	auto retVal = moveStep(direction, level);
-	if (retVal) return;
+	auto retVal = playerCreature.moveStep(direction, level);
+	if (retVal) {
+		endTurn();
+		return;
+	}
 
-	auto newPos = getTilePos() + getDirectionUnitVector(direction);
+	auto newPos = playerCreature.getTilePos() + getDirectionUnitVector(direction);
 
 	auto creatures = level.getCreatures();
 	for (auto creature_ptr : creatures)
 	{
 		if (creature_ptr->getTilePos() == newPos) {
-			attackCreature(*creature_ptr);
+			playerCreature.attackCreature(*creature_ptr);
 			endTurn();
 			return;
 		}

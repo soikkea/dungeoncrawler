@@ -2,7 +2,7 @@
 
 #include "creature.h"
 
-class Player : public Creature
+class Player
 {
 public:
 	Player(unsigned int x, unsigned int y);
@@ -11,8 +11,10 @@ public:
 	void endTurn();
 	void resetTurn();
 
-	bool moveStep(Direction direction, const Level& level);
 	void handleMoveInput(Direction direction, Level& level);
+
+	Creature playerCreature;
+
 private:
 	bool turnOver_;
 };

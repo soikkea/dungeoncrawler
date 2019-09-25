@@ -14,7 +14,7 @@ Game::Game() :
 	auto playerPos = _level.getPlayerStartingPos();
 
 	// PLACEHOLDER: init player
-	m_player.setTilePos(playerPos.x, playerPos.y);
+	m_player.playerCreature.setTilePos(playerPos.x, playerPos.y);
 
 	this->gameLoop();
 }
@@ -72,11 +72,11 @@ void Game::draw() {
 
 	// Center window on player
 	sf::View view = m_window->getDefaultView();
-	view.setCenter(m_player.getWorldCenter());
+	view.setCenter(m_player.playerCreature.getWorldCenter());
 	m_window->setView(view);
 
 	m_window->draw(_level);
-	m_window->draw(m_player);
+	m_window->draw(m_player.playerCreature);
 	m_window->display();
 }
 
