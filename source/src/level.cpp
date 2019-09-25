@@ -129,21 +129,26 @@ void Level::populate()
 		auto & room = _rooms.at(i);
 		auto x = random::randomIntBetween(room.left + 2, room.left + room.width - 3);
 		auto y = random::randomIntBetween(room.top + 2, room.top + room.height - 3);
-		_creatures.push_back(std::shared_ptr<Creature>(new Creature(x, y)));
+		_creatures.push_back(new Creature(x, y));
 	}
 }
 
 void Level::update(Player& player)
 {
 	setTile(player.playerCreature.getTilePos(), TileType::WALL);
-	for (auto creature : _creatures)
-	{
-		creature->update(*this, player);
+	auto it = _creatures.begin();
+	while (it != _creatures.end()) {
+		(*it)->update(*this, player);
+		if (!(*it)->isAlive()) {
+			_deadCreatures.push_back((*it));
+			it = _creatures.erase(it);
+		}
+		it++;
 	}
 	setTile(player.playerCreature.getTilePos(), TileType::FLOOR);
 }
 
-std::vector<std::shared_ptr<Creature>> Level::getCreatures()
+std::vector<Creature*> Level::getCreatures()
 {
 	return _creatures;
 }

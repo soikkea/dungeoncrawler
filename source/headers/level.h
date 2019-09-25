@@ -25,7 +25,7 @@ public:
 	void setTile(const sf::Vector2i pos, const TileType type);
 	void populate();
 	void update(Player& player);
-	std::vector<std::shared_ptr<Creature>> getCreatures();
+	std::vector<Creature*> getCreatures();
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -34,6 +34,7 @@ private:
 	unsigned int _height;
 	std::vector<int> _tiles;
 	sf::Vector2u _playerStartingPos;
-	std::vector<std::shared_ptr<Creature>> _creatures;
+	std::vector<Creature*> _creatures;
+	std::vector<Creature*> _deadCreatures;
 	std::vector<sf::Rect<unsigned int>> _rooms;
 };
