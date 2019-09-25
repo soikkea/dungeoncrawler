@@ -87,7 +87,7 @@ void Game::update(float elapsedTime) {
 	m_window->setTitle(title);
 
 	if (m_player.isTurnOver()) {
-		_level.update();
+		_level.update(m_player);
 
 		m_player.resetTurn();
 	}

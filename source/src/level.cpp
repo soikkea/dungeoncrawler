@@ -3,6 +3,7 @@
 #include "creature.h"
 #include "bspdungeon.h"
 #include "rng.h"
+#include "player.h"
 
 
 bool Level::load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map)
@@ -114,6 +115,12 @@ int Level::getTile(unsigned int x, unsigned int y) const
 	return _tiles.at(x + y * _width);
 }
 
+void Level::setTile(const sf::Vector2i pos, const TileType type)
+{
+	int index = pos.x + _width * pos.y;
+	_tiles[index] = static_cast<int>(type);
+}
+
 // Populate the level with NPCs
 void Level::populate()
 {
@@ -126,12 +133,19 @@ void Level::populate()
 	}
 }
 
-void Level::update()
+void Level::update(Player& player)
 {
+	setTile(player.getTilePos(), TileType::WALL);
 	for (auto creature : _creatures)
 	{
 		creature->update(*this);
 	}
+	setTile(player.getTilePos(), TileType::FLOOR);
+}
+
+std::vector<std::shared_ptr<Creature>> Level::getCreatures()
+{
+	return _creatures;
 }
 
 void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const

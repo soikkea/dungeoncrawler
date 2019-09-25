@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 class Creature;
+class Player;
 template <typename T> struct Map2D;
 
 class Level : public sf::Drawable, public sf::Transformable {
@@ -21,8 +22,10 @@ public:
 	const sf::Vector2u getPlayerStartingPos() const;
 	bool isEmpty(unsigned int x, unsigned int y) const;
 	int getTile(unsigned int x, unsigned int y) const;
+	void setTile(const sf::Vector2i pos, const TileType type);
 	void populate();
-	void update();
+	void update(Player& player);
+	std::vector<std::shared_ptr<Creature>> getCreatures();
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
