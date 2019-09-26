@@ -15,4 +15,5 @@ private:
 	sf::RenderWindow* m_window;
 	Player m_player;
 	Level _level;
+	sf::View* _gameView;
 };

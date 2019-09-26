@@ -1,12 +1,17 @@
 #include <SFML/Graphics.hpp>
 
 #include "game.h"
+#include "globals.h"
 
 Game::Game() : 
 	m_player(0, 0)
 {
 	// Initialize RendererWindow
-	m_window = new sf::RenderWindow(sf::VideoMode(800, 600), "Dungeoncrawler");
+	m_window = new sf::RenderWindow(sf::VideoMode(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT), "Dungeoncrawler");
+
+	_gameView = new sf::View(sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT * 0.8f));
+
+	m_window->setView(*_gameView);
 
 	// PLACEHOLDER: init level
 	_level = Level();
@@ -21,6 +26,7 @@ Game::Game() :
 
 Game::~Game() {
 	delete m_window;
+	delete _gameView;
 }
 
 void Game::gameLoop() {
@@ -71,9 +77,9 @@ void Game::draw() {
 	m_window->clear();
 
 	// Center window on player
-	sf::View view = m_window->getDefaultView();
-	view.setCenter(m_player.playerCreature.getWorldCenter());
-	m_window->setView(view);
+	_gameView->setCenter(m_player.playerCreature.getWorldCenter());
+	_gameView->setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 0.8f));
+	m_window->setView(*_gameView);
 
 	m_window->draw(_level);
 	m_window->draw(m_player.playerCreature);
