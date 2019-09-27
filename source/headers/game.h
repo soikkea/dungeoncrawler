@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "player.h"
 #include "level.h"
+#include "hud.h"
+
 
 class Game {
 public:
@@ -16,4 +18,5 @@ private:
 	Player m_player;
 	Level _level;
 	sf::View* _gameView;
+	Hud _hud;
 };

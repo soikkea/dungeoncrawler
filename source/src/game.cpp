@@ -13,6 +13,13 @@ Game::Game() :
 
 	m_window->setView(*_gameView);
 
+	_hud = Hud(
+		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH * 0.8f, globals::SCREEN_HEIGHT * 0.2f),
+		sf::FloatRect(0.f, 0.8f, 1.f, 0.2f),
+		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT),
+		sf::FloatRect(0.8f, 0.8f, 0.2f, 0.2f)
+	);
+
 	// PLACEHOLDER: init level
 	_level = Level();
 	_level.tmpInit();
@@ -83,6 +90,9 @@ void Game::draw() {
 
 	m_window->draw(_level);
 	m_window->draw(m_player.playerCreature);
+
+	_hud.draw(*m_window, _level);
+
 	m_window->display();
 }
 
@@ -97,4 +107,6 @@ void Game::update(float elapsedTime) {
 
 		m_player.resetTurn();
 	}
+
+	_hud.update(elapsedTime, m_player);
 }
