@@ -4,7 +4,7 @@
 #include "player.h"
 
 Creature::Creature(unsigned int x, unsigned int y) :
-	_maxHitPoints(0),
+	_maxHitPoints(10),
 	_hitPoints(10)
 {
 	setTilePos(x, y);
