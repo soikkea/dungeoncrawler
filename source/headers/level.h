@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -25,7 +26,7 @@ public:
 	void setTile(const sf::Vector2i pos, const TileType type);
 	void populate();
 	void update(Player& player);
-	std::vector<Creature*> getCreatures();
+	const std::vector<std::unique_ptr<Creature>>& getCreatures();
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -34,7 +35,7 @@ private:
 	unsigned int _height;
 	std::vector<int> _tiles;
 	sf::Vector2u _playerStartingPos;
-	std::vector<Creature*> _creatures;
-	std::vector<Creature*> _deadCreatures;
+	std::vector<std::unique_ptr<Creature>> _creatures;
+	std::vector<std::unique_ptr<Creature>> _deadCreatures;
 	std::vector<sf::Rect<unsigned int>> _rooms;
 };

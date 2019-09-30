@@ -35,8 +35,7 @@ void Player::handleMoveInput(Direction direction, Level & level)
 
 	auto newPos = playerCreature.getTilePos() + getDirectionUnitVector(direction);
 
-	auto creatures = level.getCreatures();
-	for (auto creature_ptr : creatures)
+	for (auto& creature_ptr : level.getCreatures())
 	{
 		if (creature_ptr->getTilePos() == newPos) {
 			playerCreature.attackCreature(*creature_ptr);
