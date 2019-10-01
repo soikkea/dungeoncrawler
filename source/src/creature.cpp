@@ -1,7 +1,9 @@
+#include <sstream>
 #include "creature.h"
 #include "rng.h"
 #include "globals.h"
 #include "player.h"
+#include "hud.h"
 
 Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(10),
@@ -68,5 +70,15 @@ void Creature::attackCreature(Creature & target)
 {
 	if (intDistance(getTilePos(), target.getTilePos()) <= 1) {
 		target.gainHitpoints(-1);
+	}
+
+	std::ostringstream oss;
+	oss << _name << " attacked " << target.getName() << ", dealing 1 damage." << std::endl;
+	Hud::actionLog.push_back(oss.str());
+
+	if (!target.isAlive()) {
+		std::ostringstream oss;
+		oss << target.getName() << " was killed!" << std::endl;
+		Hud::actionLog.push_back(oss.str());
 	}
 }

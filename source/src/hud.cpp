@@ -43,7 +43,6 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 	_logText.setCharacterSize(16);
 	_logText.setPosition(150.f, 0.f);
 
-	actionLog.push_back("This is a test");
 }
 
 Hud::Hud(const Hud & otherHud) :
@@ -90,7 +89,7 @@ void Hud::update(float elapsedTime, const Player& player)
 
 std::string Hud::getActionLogString()
 {
-	while (actionLog.size() > 10) {
+	while (actionLog.size() > 6) {
 		actionLog.pop_front();
 	}
 	std::string logString;
