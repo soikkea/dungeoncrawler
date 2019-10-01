@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include <SFML/Graphics.hpp>
 
 class Player;
@@ -15,7 +17,11 @@ public:
 	void draw(sf::RenderWindow& window, const Level& level);
 	void update(float elapsedTime, const Player& player);
 
+	std::string getActionLogString();
+
 	Hud& operator=(const Hud& other);
+
+	static std::list<std::string> actionLog;
 private:
 	sf::View _infoView;
 	sf::View _miniMapView;
@@ -23,4 +29,5 @@ private:
 	sf::FloatRect _miniMapViewPort;
 	sf::Font _font;
 	sf::Text _text;
+	sf::Text _logText;
 };
