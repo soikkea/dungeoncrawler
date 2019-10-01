@@ -14,6 +14,8 @@ public:
 	const int getMaxHitPoints() const;
 	void gainHitpoints(int amount);
 	virtual bool isAlive() const;
+	const std::string getName() const;
+	void setName(std::string name);
 
 	void update(Level& level, Player& player);
 
@@ -21,4 +23,5 @@ public:
 protected:
 	int _maxHitPoints;
 	int _hitPoints;
+	std::string _name;
 };

@@ -5,7 +5,8 @@
 
 Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(10),
-	_hitPoints(10)
+	_hitPoints(10),
+	_name("Creature")
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -33,6 +34,16 @@ void Creature::gainHitpoints(int amount)
 bool Creature::isAlive() const
 {
 	return _hitPoints > 0;
+}
+
+const std::string Creature::getName() const
+{
+	return _name;
+}
+
+void Creature::setName(std::string name)
+{
+	_name = name;
 }
 
 void Creature::update(Level & level, Player& player)

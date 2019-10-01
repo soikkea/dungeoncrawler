@@ -8,6 +8,7 @@ Player::Player(unsigned int x, unsigned int y) :
 	turnOver_(false)
 {
 	playerCreature.setColor(sf::Color::Blue);
+	playerCreature.setName("Player");
 }
 
 bool Player::isTurnOver()
