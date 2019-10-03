@@ -9,7 +9,8 @@
 Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(10),
 	_hitPoints(10),
-	_name("Creature")
+	_name("Creature"),
+	_sightLine(sf::Lines, 2)
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -55,6 +56,8 @@ void Creature::update(Level & level, Player& player)
 
 	_seesPlayer = level.getLineOfSight(getTilePos(), player.playerCreature.getTilePos());
 
+	_sightLine[1].position = player.playerCreature.getWorldCenter();
+
 	if (intDistance(getTilePos(), player.playerCreature.getTilePos()) <= 1) {
 		return;
 	}
@@ -66,6 +69,17 @@ void Creature::update(Level & level, Player& player)
 			break;
 		}
 		dir = (dir + 1) % 4;
+	}
+
+	_sightLine[0].position = getWorldCenter();
+}
+
+void Creature::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	Sprite::draw(target, states);
+
+	if (_seesPlayer) {
+		target.draw(_sightLine, states);
 	}
 }
 

@@ -18,11 +18,14 @@ public:
 	void setName(std::string name);
 
 	void update(Level& level, Player& player);
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	virtual void attackCreature(Creature& target);
 protected:
 	int _maxHitPoints;
 	int _hitPoints;
 	std::string _name;
+
+	sf::VertexArray _sightLine;
 	bool _seesPlayer;
 };
