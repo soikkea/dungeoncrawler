@@ -24,6 +24,7 @@ public:
 	bool isEmpty(unsigned int x, unsigned int y) const;
 	int getTile(unsigned int x, unsigned int y) const;
 	void setTile(const sf::Vector2i pos, const TileType type);
+	bool getLineOfSight(const sf::Vector2i& start, const sf::Vector2i& end);
 	void populate();
 	void update(Player& player);
 	const std::vector<std::unique_ptr<Creature>>& getCreatures();

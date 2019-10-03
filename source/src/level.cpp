@@ -121,6 +121,48 @@ void Level::setTile(const sf::Vector2i pos, const TileType type)
 	_tiles[index] = static_cast<int>(type);
 }
 
+bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
+{
+	float deltaX = (float)abs(start.x - end.x);
+	float deltaY = (float)abs(start.y - end.y);
+	float width = deltaX > deltaY ? deltaX : deltaY;
+	float height = deltaX < deltaY ? deltaX : deltaY;
+	float error = width * 0.5f;
+	bool loopOverX = deltaX > deltaY;
+	int  s, t, sStep, tStep, sEnd;
+	if (loopOverX) {
+		sStep = start.x < end.x ? 1 : -1;
+		tStep = start.y < end.y ? 1 : -1;
+		s = start.x + sStep;
+		sEnd = end.x;
+		t = start.y;
+	}
+	else {
+		sStep = start.y < end.y ? 1 : -1;
+		tStep = start.x < end.x ? 1 : -1;
+		s = start.y + sStep;
+		sEnd = end.y;
+		t = start.x;
+	}
+	while (s != sEnd) {
+		if (loopOverX) {
+			// s, t
+			if (!isEmpty(s, t)) return false;
+		}
+		else {
+			// t, s
+			if (!isEmpty(t, s)) return false;
+		}
+		error = error + height;
+		if (error >= width) {
+			t += tStep;
+			error = error - width;
+		}
+		s += sStep;
+	}
+	return true;
+}
+
 // Populate the level with NPCs
 void Level::populate()
 {
@@ -135,6 +177,7 @@ void Level::populate()
 
 void Level::update(Player& player)
 {
+	// Make sure creatures do not walk where the player is
 	setTile(player.playerCreature.getTilePos(), TileType::WALL);
 	auto it = _creatures.begin();
 	while (it != _creatures.end()) {

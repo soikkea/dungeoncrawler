@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "player.h"
 #include "hud.h"
+#include "level.h"
 
 Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(10),
@@ -51,6 +52,8 @@ void Creature::setName(std::string name)
 void Creature::update(Level & level, Player& player)
 {
 	if (!isAlive()) return;
+
+	_seesPlayer = level.getLineOfSight(getTilePos(), player.playerCreature.getTilePos());
 
 	if (intDistance(getTilePos(), player.playerCreature.getTilePos()) <= 1) {
 		return;

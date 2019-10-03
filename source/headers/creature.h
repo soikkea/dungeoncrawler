@@ -24,4 +24,5 @@ protected:
 	int _maxHitPoints;
 	int _hitPoints;
 	std::string _name;
+	bool _seesPlayer;
 };
