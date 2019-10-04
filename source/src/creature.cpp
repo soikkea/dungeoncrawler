@@ -10,7 +10,10 @@ Creature::Creature(unsigned int x, unsigned int y) :
 	_maxHitPoints(10),
 	_hitPoints(10),
 	_name("Creature"),
-	_sightLine(sf::Lines, 2)
+	_sightLine(sf::Lines, 2),
+	_level(1),
+	_experience(0),
+	_experienceWorth(100)
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -48,6 +51,26 @@ const std::string Creature::getName() const
 void Creature::setName(std::string name)
 {
 	_name = name;
+}
+
+const int Creature::getLevel() const
+{
+	return _level;
+}
+
+const int Creature::getExperience() const
+{
+	return _experience;
+}
+
+const int Creature::getExperienceWorth() const
+{
+	return _experienceWorth;
+}
+
+void Creature::gainExperience(int amount)
+{
+	_experience += amount;
 }
 
 void Creature::update(Level & level, Player& player)
@@ -97,5 +120,10 @@ void Creature::attackCreature(Creature & target)
 		std::ostringstream oss;
 		oss << target.getName() << " was killed!" << std::endl;
 		Hud::actionLog.push_back(oss.str());
+		gainExperience(target.getExperienceWorth());
+
+		std::ostringstream oss2;
+		oss2 << _name << " gained " << target.getExperienceWorth() << " experience." << std::endl;
+		Hud::actionLog.push_back(oss2.str());
 	}
 }

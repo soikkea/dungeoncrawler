@@ -79,10 +79,12 @@ void Hud::update(float elapsedTime, const Player& player)
 {
 	_miniMapView.setCenter(player.playerCreature.getWorldCenter());
 
-	std::ostringstream playerHealth;
-	playerHealth.setf(std::ios::fixed);
-	playerHealth << "Health: " << player.playerCreature.getHitPoints() << "/" << player.playerCreature.getMaxHitPoints() << std::endl;
-	_text.setString(playerHealth.str());
+	std::ostringstream playerInfo;
+	playerInfo.setf(std::ios::fixed);
+	playerInfo << "Health: " << player.playerCreature.getHitPoints() << "/" << player.playerCreature.getMaxHitPoints() << std::endl;
+	playerInfo << "Level: " << player.playerCreature.getLevel() << std::endl;
+	playerInfo << "Experience: " << player.playerCreature.getExperience() << std::endl;
+	_text.setString(playerInfo.str());
 
 	_logText.setString(getActionLogString());
 }

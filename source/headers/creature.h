@@ -16,6 +16,10 @@ public:
 	virtual bool isAlive() const;
 	const std::string getName() const;
 	void setName(std::string name);
+	const int getLevel() const;
+	const int getExperience() const;
+	const int getExperienceWorth() const;
+	void gainExperience(int amount);
 
 	void update(Level& level, Player& player);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -25,6 +29,9 @@ protected:
 	int _maxHitPoints;
 	int _hitPoints;
 	std::string _name;
+	int _level;
+	int _experience;
+	int _experienceWorth;
 
 	sf::VertexArray _sightLine;
 	bool _seesPlayer;
