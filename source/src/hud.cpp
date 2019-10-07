@@ -83,7 +83,7 @@ void Hud::update(float elapsedTime, const Player& player)
 	playerInfo.setf(std::ios::fixed);
 	playerInfo << "Health: " << player.playerCreature.getHitPoints() << "/" << player.playerCreature.getMaxHitPoints() << std::endl;
 	playerInfo << "Level: " << player.playerCreature.getLevel() << std::endl;
-	playerInfo << "Experience: " << player.playerCreature.getExperience() << std::endl;
+	playerInfo << "Experience: " << player.playerCreature.getExperience() << "/" << player.playerCreature.getExpRequiredToNextLevel() << std::endl;
 	_text.setString(playerInfo.str());
 
 	_logText.setString(getActionLogString());

@@ -19,7 +19,9 @@ public:
 	const int getLevel() const;
 	const int getExperience() const;
 	const int getExperienceWorth() const;
+	const int getExpRequiredToNextLevel() const;
 	void gainExperience(int amount);
+	void gainLevel(int amount);
 
 	void update(Level& level, Player& player);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -32,6 +34,7 @@ protected:
 	int _level;
 	int _experience;
 	int _experienceWorth;
+	int _experienceReqToNextLevel;
 
 	sf::VertexArray _sightLine;
 	bool _seesPlayer;

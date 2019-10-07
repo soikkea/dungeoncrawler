@@ -13,7 +13,8 @@ Creature::Creature(unsigned int x, unsigned int y) :
 	_sightLine(sf::Lines, 2),
 	_level(1),
 	_experience(0),
-	_experienceWorth(100)
+	_experienceWorth(50),
+	_experienceReqToNextLevel(100)
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -36,6 +37,9 @@ const int Creature::getMaxHitPoints() const
 void Creature::gainHitpoints(int amount)
 {
 	_hitPoints += amount;
+	if (_hitPoints > _maxHitPoints) {
+		_hitPoints = _maxHitPoints;
+	}
 }
 
 bool Creature::isAlive() const
@@ -68,9 +72,30 @@ const int Creature::getExperienceWorth() const
 	return _experienceWorth;
 }
 
+const int Creature::getExpRequiredToNextLevel() const
+{
+	return _experienceReqToNextLevel;
+}
+
 void Creature::gainExperience(int amount)
 {
 	_experience += amount;
+	if (_experience >= _experienceReqToNextLevel) {
+		gainLevel(1);
+	}
+}
+
+void Creature::gainLevel(int amount)
+{
+	for (int i = 0; i < amount; i++) {
+		_level++;
+		_experienceReqToNextLevel = (int)(_experienceReqToNextLevel * 2.1f);
+	}
+	gainHitpoints(_maxHitPoints);
+
+	std::ostringstream oss;
+	oss << _name << " leveled up!" << std::endl;
+	Hud::actionLog.push_back(oss.str());
 }
 
 void Creature::update(Level & level, Player& player)
@@ -120,10 +145,10 @@ void Creature::attackCreature(Creature & target)
 		std::ostringstream oss;
 		oss << target.getName() << " was killed!" << std::endl;
 		Hud::actionLog.push_back(oss.str());
-		gainExperience(target.getExperienceWorth());
 
 		std::ostringstream oss2;
 		oss2 << _name << " gained " << target.getExperienceWorth() << " experience." << std::endl;
 		Hud::actionLog.push_back(oss2.str());
+		gainExperience(target.getExperienceWorth());
 	}
 }
