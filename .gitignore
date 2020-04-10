@@ -264,3 +264,6 @@ __pycache__/
 *.sln
 *.vcxproj
 *.filters
+
+out/
+CMakeSettings.json

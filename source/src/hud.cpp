@@ -27,7 +27,7 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 
 	_font = sf::Font();
 
-	if (!_font.loadFromFile("../resources/fonts/Roboto-Regular.ttf")) {
+	if (!_font.loadFromFile("./resources/fonts/Roboto-Regular.ttf")) {
 		throw std::runtime_error("Could not load fonts");
 	}
 
