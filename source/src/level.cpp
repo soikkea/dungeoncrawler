@@ -38,7 +38,7 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map)
 				tileColor = sf::Color::Black;
 				break;
 			case static_cast<int>(Level::TileType::FLOOR):
-				tileColor = sf::Color::Color(224, 224, 224);
+				tileColor = sf::Color(224, 224, 224);
 				break;
 			case static_cast<int>(Level::TileType::WALL):
 				tileColor = sf::Color::White;
