@@ -358,7 +358,7 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 	int bRight = bLeft + rightLimits.width - 1;
 	int bBottom = bTop + rightLimits.height - 1;
 
-	const enum Orientation
+	enum Orientation
 	{
 		HORIZONTAL,
 		VERTICAL
