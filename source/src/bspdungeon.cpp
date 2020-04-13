@@ -83,8 +83,8 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	// Add starting position for the player
 	auto & room = map->rooms[0];
 
-	auto x = random::randomIntBetween(room.left + 2, room.left + room.width - 2);
-	auto y = random::randomIntBetween(room.top + 2, room.top + room.height - 2);
+	auto x = rng::randomIntBetween(room.left + 2, room.left + room.width - 2);
+	auto y = rng::randomIntBetween(room.top + 2, room.top + room.height - 2);
 
 	map->setValueAt(x, y, static_cast<unsigned int>(Level::TileType::PLAYER));
 
@@ -102,7 +102,7 @@ void BSPDungeon::split()
 		HORIZONTAL=1
 	};
 
-	SplitDir direction = (SplitDir) random::randomInt(1);
+	SplitDir direction = (SplitDir) rng::randomInt(1);
 
 	int a, b, splitPos, length, splitLength;
 
@@ -123,7 +123,7 @@ void BSPDungeon::split()
 	a = (int) (0.45f * length);
 	b = (int) (0.55f * length);
 
-	splitLength = random::randomIntBetween(a, b);
+	splitLength = rng::randomIntBetween(a, b);
 	splitPos += splitLength;
 
 	sf::Rect<unsigned int> leftLimits, rightLimits;
@@ -264,10 +264,10 @@ void BSPDungeon::generateRoom()
 
 	if (limits.width > MAX_ROOM_SIZE && limits.height > MAX_ROOM_SIZE)
 	{
-		auto width = random::randomIntBetween(MAX_ROOM_SIZE, limits.width);
-		auto height = random::randomIntBetween(MAX_ROOM_SIZE, limits.height);
-		top = random::randomIntBetween(top, bottom - height);
-		left = random::randomIntBetween(left, right - width);
+		auto width = rng::randomIntBetween(MAX_ROOM_SIZE, limits.width);
+		auto height = rng::randomIntBetween(MAX_ROOM_SIZE, limits.height);
+		top = rng::randomIntBetween(top, bottom - height);
+		left = rng::randomIntBetween(left, right - width);
 		right = left + width;
 		bottom = top + height;
 		room = sf::Rect<unsigned int>(left, top, width, height);

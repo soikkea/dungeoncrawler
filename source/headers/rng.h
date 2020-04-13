@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace random {
+namespace rng {
 
 	const int SEED = 5;
 

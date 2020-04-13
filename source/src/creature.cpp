@@ -110,7 +110,7 @@ void Creature::update(Level & level, Player& player)
 		return;
 	}
 
-	int dir = random::randomInt(3);
+	int dir = rng::randomInt(3);
 	for (int i = 0; i < 4; i++) {
 		auto didMove = moveStep(static_cast<Direction>(dir), level);
 		if (didMove) {
