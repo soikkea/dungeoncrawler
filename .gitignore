@@ -267,3 +267,7 @@ __pycache__/
 
 out/
 CMakeSettings.json
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
