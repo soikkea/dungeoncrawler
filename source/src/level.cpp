@@ -6,10 +6,10 @@
 #include "player.h"
 
 
-bool Level::load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map)
+bool Level::load(const sf::Vector2u tileSize, const Map2D & map)
 {
-	unsigned int width = map.width;
-	unsigned int height = map.height;
+	int width = map.width;
+	int height = map.height;
 
 	// Resize the vertex array to fit the level size
 	_vertices.setPrimitiveType(sf::Quads);
@@ -18,32 +18,32 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D<unsigned int> & map)
 	_width = width;
 	_height = height;
 
-	_tiles.resize(width * height);
+	_tiles = std::vector<std::vector<Tile>>(map.map);
 
 	// Populate the vertex array, with one quad per tile
-	for (unsigned int i = 0; i < width; i++)
+	for (int i = 0; i < width; i++)
 	{
-		for (unsigned int j = 0; j < height; j++)
+		for (int j = 0; j < height; j++)
 		{
 			// Get the current tile number
-			int tileNumber = map.map[i + j * width];
+			auto tile = map.getTileAt(i, j);
 
-			_tiles[i + j * width] = tileNumber;
+			_tiles[i][j] = tile;
 
 			// Get color for tile
 			sf::Color tileColor;
-			switch (tileNumber)
+			switch (tile.type)
 			{
-			case static_cast<int>(Level::TileType::EMPTY):
+			case TileType::EMPTY:
 				tileColor = sf::Color::Black;
 				break;
-			case static_cast<int>(Level::TileType::FLOOR):
+			case TileType::FLOOR:
 				tileColor = sf::Color(224, 224, 224);
 				break;
-			case static_cast<int>(Level::TileType::WALL):
+			case TileType::WALL:
 				tileColor = sf::Color::White;
 				break;
-			case static_cast<int>(Level::TileType::PLAYER):
+			case TileType::PLAYER:
 				tileColor = sf::Color::Cyan;
 				_playerStartingPos = sf::Vector2u(i, j);
 				break;
@@ -97,11 +97,11 @@ const sf::Vector2u Level::getPlayerStartingPos() const
 	return _playerStartingPos;
 }
 
-bool Level::isEmpty(unsigned int x, unsigned int y) const
+bool Level::isEmpty(int x, int y) const
 {
 	if (x >= _width || y >= _height) return false;
-	int tile = getTile(x, y);
-	if (tile == static_cast<int>(Level::TileType::WALL)) return false;
+	auto tile = getTile(x, y);
+	if (tile.type == TileType::WALL) return false;
 	for (auto& creature : _creatures)
 	{
 		sf::Vector2i creaturePos = creature->getTilePos();
@@ -110,15 +110,14 @@ bool Level::isEmpty(unsigned int x, unsigned int y) const
 	return true;
 }
 
-int Level::getTile(unsigned int x, unsigned int y) const
+const Tile& Level::getTile(int x, int y) const
 {
-	return _tiles.at(x + y * _width);
+	return _tiles.at(x).at(y);
 }
 
 void Level::setTile(const sf::Vector2i pos, const TileType type)
 {
-	int index = pos.x + _width * pos.y;
-	_tiles[index] = static_cast<int>(type);
+	_tiles[pos.x][pos.y].type = type;
 }
 
 bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
@@ -166,7 +165,7 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 // Populate the level with NPCs
 void Level::populate()
 {
-	for (int i = 1; i < _rooms.size(); i++)
+	for (size_t i = 1; i < _rooms.size(); i++)
 	{
 		auto & room = _rooms.at(i);
 		auto x = rng::randomIntBetween(room.left + 2, room.left + room.width - 3);

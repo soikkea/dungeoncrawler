@@ -9,33 +9,55 @@
 #include "rng.h"
 #include "globals.h"
 
-template<typename T>
-Map2D<T>::Map2D(int width, int height, T initValue) :
+Tile::Tile() :
+	type(TileType::EMPTY),
+	visibility(TileVisibility::UNSEEN)
+{
+}
+
+bool Tile::IsType(TileType type) const
+{
+	return this->type == type;
+}
+
+Map2D::Map2D(int width, int height) :
 	width(width),
-	height(height),
-	map(std::vector<T>(width * height, initValue))
+	height(height)
 {
+	Tile defaultTile;
+	map = std::vector<std::vector<Tile>>(width, std::vector<Tile>(height, defaultTile));
 }
 
-template<typename T>
-void Map2D<T>::setValueAt(int x, int y, T value)
+Map2D::~Map2D()
 {
-	map.at(x + y * width) = value;
+	for (size_t x = 0; x < width; x++)
+	{
+		map[x].clear();
+	}
+	map.clear();
 }
 
-template<typename T>
-T Map2D<T>::getValueAt(int x, int y)
+void Map2D::setTileAt(int x, int y, const Tile& value)
 {
-	return map.at(x + y * width);
+	map[x][y] = value;
 }
 
-template<typename T>
-T Map2D<T>::getValueAt(sf::Vector2i point)
+void Map2D::setTileTypeAt(int x, int y, TileType tileType)
 {
-	return getValueAt(point.x, point.y);
+	map[x][y].type = tileType;
 }
 
-BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<unsigned int>> map) :
+const Tile Map2D::getTileAt(int x, int y) const
+{
+	return map[x][y];
+}
+
+const Tile Map2D::getTileAt(sf::Vector2i point) const
+{
+	return getTileAt(point.x, point.y);
+}
+
+BSPDungeon::BSPDungeon(sf::Rect<int> limits, std::shared_ptr<Map2D> map) :
 	leftChild(),
 	rightChild(),
 	map(map),
@@ -46,8 +68,8 @@ BSPDungeon::BSPDungeon(sf::Rect<unsigned int> limits, std::shared_ptr<Map2D<unsi
 
 std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
 {
-	auto map = std::make_shared<Map2D<unsigned int>>(width, height, static_cast<int>(Level::TileType::EMPTY));
-	sf::Rect<unsigned int> limits(0, 0, width, height);
+	auto map = std::make_shared<Map2D>(width, height);
+	sf::Rect<int> limits(0, 0, width, height);
 	auto root = std::make_shared<BSPDungeon>(limits, map);
 	std::queue<std::shared_ptr<BSPDungeon>> nodeQueue;
 	std::shared_ptr<BSPDungeon> rootPtr(root);
@@ -86,7 +108,7 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	auto x = rng::randomIntBetween(room.left + 2, room.left + room.width - 2);
 	auto y = rng::randomIntBetween(room.top + 2, room.top + room.height - 2);
 
-	map->setValueAt(x, y, static_cast<unsigned int>(Level::TileType::PLAYER));
+	map->setTileTypeAt(x, y, TileType::PLAYER);
 
 	return root;
 }
@@ -126,17 +148,17 @@ void BSPDungeon::split()
 	splitLength = rng::randomIntBetween(a, b);
 	splitPos += splitLength;
 
-	sf::Rect<unsigned int> leftLimits, rightLimits;
+	sf::Rect<int> leftLimits, rightLimits;
 
 	if (direction == VERTICAL)
 	{
-		leftLimits =  sf::Rect<unsigned int>(limits.left, limits.top, splitLength, limits.height);
-		rightLimits = sf::Rect<unsigned int>(splitPos, limits.top, length - splitLength, limits.height);
+		leftLimits =  sf::Rect<int>(limits.left, limits.top, splitLength, limits.height);
+		rightLimits = sf::Rect<int>(splitPos, limits.top, length - splitLength, limits.height);
 	}
 	else if (direction == HORIZONTAL)
 	{
-		leftLimits = sf::Rect<unsigned int>(limits.left, limits.top, limits.width, splitLength);
-		rightLimits = sf::Rect<unsigned int>(limits.left, splitPos, limits.width, length - splitLength);
+		leftLimits = sf::Rect<int>(limits.left, limits.top, limits.width, splitLength);
+		rightLimits = sf::Rect<int>(limits.left, splitPos, limits.width, length - splitLength);
 	}
 
 	// Create child nodes
@@ -190,8 +212,11 @@ void BSPDungeon::connect()
 			if (xOverlap)
 			{
 				int midX = (cX + dX) / 2;
-				assert(map->getValueAt(midX, aTop) != static_cast<int>(Level::TileType::EMPTY));
-				assert(map->getValueAt(midX, bBottom) != static_cast<int>(Level::TileType::EMPTY));
+
+				// TODO: Remove assert
+				assert(!map->getTileAt(midX, aTop).IsType(TileType::EMPTY));
+				assert(!map->getTileAt(midX, bBottom).IsType(TileType::EMPTY));
+
 				int cStart, cEnd;
 				if (top)
 				{
@@ -208,8 +233,11 @@ void BSPDungeon::connect()
 			else if (yOverlap)
 			{
 				int midY = (cY + dY) / 2;
-				assert(map->getValueAt(aRight, midY) != static_cast<int>(Level::TileType::EMPTY));
-				assert(map->getValueAt(bLeft, midY) != static_cast<int>(Level::TileType::EMPTY));
+
+				// TODO: Remove assert
+				assert(!map->getTileAt(aRight, midY).IsType(TileType::EMPTY));
+				assert(!map->getTileAt(bLeft, midY).IsType(TileType::EMPTY));
+
 				int cStart, cEnd;
 				if (right)
 				{
@@ -234,7 +262,9 @@ void BSPDungeon::connect()
 				int offset = aYMid < bYMid ? -1 : 1;
 				createCorridor(aXMid, aYMid, bXMid, aYMid, CORRIDOR_WIDTH);
 				createCorridor(bXMid, aYMid + offset, bXMid, bYMid, CORRIDOR_WIDTH);
-				assert(map->getValueAt(bXMid, aYMid) == static_cast<int>(Level::TileType::FLOOR));
+
+				// TODO: Remove assert
+				assert(map->getTileAt(bXMid, aYMid).IsType(TileType::FLOOR));
 			}
 
 		}
@@ -270,7 +300,7 @@ void BSPDungeon::generateRoom()
 		left = rng::randomIntBetween(left, right - width);
 		right = left + width;
 		bottom = top + height;
-		room = sf::Rect<unsigned int>(left, top, width, height);
+		room = sf::Rect<int>(left, top, width, height);
 	}
 
 	for (auto x = left; x < right; x++)
@@ -283,11 +313,11 @@ void BSPDungeon::generateRoom()
 				x == left || x == right - 1
 				)
 			{
-				map->setValueAt(x, y, static_cast<int>(Level::TileType::WALL));
+				map->setTileTypeAt(x, y, TileType::WALL);
 			}
 			else
 			{
-				map->setValueAt(x, y, static_cast<int>(Level::TileType::FLOOR));
+				map->setTileTypeAt(x, y, TileType::FLOOR);
 			}
 		}
 	}
@@ -328,11 +358,12 @@ void BSPDungeon::createCorridor(int x1, int y1, int x2, int y2, int width)
 		{
 			if (x == left || x == right || y == top || y == bottom)
 			{
-				if (map->getValueAt(x, y) == static_cast<int>(Level::TileType::EMPTY)) map->setValueAt(x, y, static_cast<int>(Level::TileType::WALL));
+				if (map->getTileAt(x, y).type == TileType::EMPTY)
+					map->setTileTypeAt(x, y, TileType::WALL);
 			}
 			else
 			{
-				map->setValueAt(x, y, static_cast<int>(Level::TileType::FLOOR));
+				map->setTileTypeAt(x, y, TileType::FLOOR);
 			}
 		}
 	}
@@ -340,13 +371,13 @@ void BSPDungeon::createCorridor(int x1, int y1, int x2, int y2, int width)
 
 }
 
-std::shared_ptr<Map2D<unsigned int>> BSPDungeon::getMap()
+std::shared_ptr<Map2D> BSPDungeon::getMap()
 {
 	return map;
 }
 
 // Connect two non-leaf nodes
-bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf::Rect<unsigned int>& rightLimits)
+bool BSPDungeon::connectNodes(const sf::Rect<int>& leftLimits, const sf::Rect<int>& rightLimits)
 {
 	bool edgesFound = false;
 	int aTop = leftLimits.top;
@@ -394,27 +425,27 @@ bool BSPDungeon::connectNodes(const sf::Rect<unsigned int>& leftLimits, const sf
 	for (int i = iStart; i <= iEnd; i++) {
 		// Loop over all rows/columns
 
-		int aValue = 0;
-		int bValue = 0;
+		TileType aValue = TileType::EMPTY;
+		TileType bValue = TileType::EMPTY;
 		int a;
 		for (a = aStart; a >= aEnd; a--) {
 			auto point = createVector(i, a);
-			aValue = map->getValueAt(point);
-			if (aValue == static_cast<int>(Level::TileType::FLOOR)) {
+			aValue = map->getTileAt(point).type;
+			if (aValue == TileType::FLOOR) {
 				break;
 			}
 		}
 		int b;
 		for (b = bStart; b <= bEnd; b++) {
 			auto point = createVector(i, b);
-			bValue = map->getValueAt(point);
-			if (bValue == static_cast<int>(Level::TileType::FLOOR)) {
+			bValue = map->getTileAt(point).type;
+			if (bValue == TileType::FLOOR) {
 				break;
 			}
 		}
 
-		if (aValue == static_cast<int>(Level::TileType::FLOOR) &&
-			bValue == static_cast<int>(Level::TileType::FLOOR))
+		if (aValue == TileType::FLOOR &&
+			bValue == TileType::FLOOR)
 		{
 			int dist = b - a;
 			if (dist < shortestDist) {
