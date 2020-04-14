@@ -10,10 +10,16 @@ file(GLOB SOURCES
 	"./source/src/*.cpp"
 )
 
+file(GLOB TESTS
+	"./source/tests/*.cpp"
+)
+
 # Set this in cmake cache
 #set(SFML_DIR "path/to/SFML-2.5.1/lib/cmake/SFML")
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+
+find_package(Catch2 REQUIRED)
 
 add_executable(dungeoncrawler ${SOURCES})
 
@@ -36,4 +42,17 @@ target_link_libraries(dungeoncrawler PUBLIC
 add_custom_command(TARGET dungeoncrawler POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${CMAKE_SOURCE_DIR}/resources/ $<TARGET_FILE_DIR:dungeoncrawler>/resources/
+)
+
+add_executable(dungeoncrawler-tests ${TESTS})
+
+target_include_directories(dungeoncrawler-tests PUBLIC
+	"./source/headers"
+)
+
+target_link_libraries(dungeoncrawler-tests
+	"sfml-graphics"
+	"sfml-window"
+	"sfml-system"
+	Catch2::Catch2
 )
