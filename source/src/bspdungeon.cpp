@@ -119,23 +119,23 @@ void BSPDungeon::split()
 
 	// Pick random direction
 	// 0 = vertical, 1 = horizontal
-	enum SplitDir {
+	enum class SplitDir {
 		VERTICAL=0,
 		HORIZONTAL=1
 	};
 
 	SplitDir direction = (SplitDir) rng::randomInt(1);
 
-	int a, b, splitPos, length, splitLength;
+	int a, b, splitPos = 0, length = 0, splitLength;
 
 	// Pick random position for split
-	if (direction == VERTICAL)
+	if (direction == SplitDir::VERTICAL)
 	{
 		// Vertical split
 		length = limits.width;
 		splitPos = limits.left;
 	}
-	else if (direction == HORIZONTAL)
+	else if (direction == SplitDir::HORIZONTAL)
 	{
 		// Horizontal split
 		length = limits.height;
@@ -150,12 +150,12 @@ void BSPDungeon::split()
 
 	sf::Rect<int> leftLimits, rightLimits;
 
-	if (direction == VERTICAL)
+	if (direction == SplitDir::VERTICAL)
 	{
 		leftLimits =  sf::Rect<int>(limits.left, limits.top, splitLength, limits.height);
 		rightLimits = sf::Rect<int>(splitPos, limits.top, length - splitLength, limits.height);
 	}
-	else if (direction == HORIZONTAL)
+	else if (direction == SplitDir::HORIZONTAL)
 	{
 		leftLimits = sf::Rect<int>(limits.left, limits.top, limits.width, splitLength);
 		rightLimits = sf::Rect<int>(limits.left, splitPos, limits.width, length - splitLength);
@@ -206,7 +206,6 @@ void BSPDungeon::connect()
 
 			xOverlap = getOverlap(aLeft, aRight, bLeft, bRight, cX, dX);
 			yOverlap = getOverlap(aTop, aBottom, bTop, bBottom, cY, dY);
-
 			
 
 			if (xOverlap)
