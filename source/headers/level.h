@@ -17,7 +17,7 @@ class Level : public sf::Drawable, public sf::Transformable {
 public:
 	bool load(const sf::Vector2u tileSize, const Map2D & map);
 	void tmpInit();
-	const sf::Vector2u getPlayerStartingPos() const;
+	const sf::Vector2i getPlayerStartingPos() const;
 	bool isEmpty(int x, int y) const;
 	const Tile& getTile(int x, int y) const;
 	void setTile(const sf::Vector2i pos, const TileType type);
@@ -28,11 +28,15 @@ public:
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+	void updateFog(const sf::Vector2i& playerPos);
+
 	sf::VertexArray _vertices;
+	sf::VertexArray _fog;
+	sf::Vector2u _tileSize;
 	int _width;
 	int _height;
 	std::vector<std::vector<Tile>> _tiles;
-	sf::Vector2u _playerStartingPos;
+	sf::Vector2i _playerStartingPos;
 	std::vector<std::unique_ptr<Creature>> _creatures;
 	std::vector<std::unique_ptr<Creature>> _deadCreatures;
 	std::vector<sf::Rect<int>> _rooms;

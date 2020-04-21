@@ -15,6 +15,11 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D & map)
 	_vertices.setPrimitiveType(sf::Quads);
 	_vertices.resize(width * height * 4);
 
+	_fog.setPrimitiveType(sf::Quads);
+	_fog.resize(width * height * 4);
+
+	_tileSize = tileSize;
+
 	_width = width;
 	_height = height;
 
@@ -45,7 +50,7 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D & map)
 				break;
 			case TileType::PLAYER:
 				tileColor = sf::Color::Cyan;
-				_playerStartingPos = sf::Vector2u(i, j);
+				_playerStartingPos = sf::Vector2i(i, j);
 				break;
 			default:
 				tileColor = sf::Color::Cyan;
@@ -90,9 +95,11 @@ void Level::tmpInit()
 	load(sf::Vector2u(globals::TILE_SIZE, globals::TILE_SIZE), *map);
 
 	populate();
+
+	updateFog(_playerStartingPos);
 }
 
-const sf::Vector2u Level::getPlayerStartingPos() const
+const sf::Vector2i Level::getPlayerStartingPos() const
 {
 	return _playerStartingPos;
 }
@@ -188,6 +195,8 @@ void Level::update(Player& player)
 		it++;
 	}
 	setTile(player.playerCreature.getTilePos(), TileType::FLOOR);
+
+	updateFog(player.playerCreature.getTilePos());
 }
 
 const std::vector<std::unique_ptr<Creature>>& Level::getCreatures()
@@ -205,6 +214,66 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 	for (size_t i = 0; i < _creatures.size(); i++)
 	{
-		_creatures.at(i)->draw(target, states);
+		auto& creature = _creatures.at(i);
+		auto creaturePos = creature->getTilePos();
+		if (_tiles[creaturePos.x][creaturePos.y].visibility == TileVisibility::VISIBLE)
+			_creatures.at(i)->draw(target, states);
+	}
+
+	target.draw(_fog, states);
+}
+
+void Level::updateFog(const sf::Vector2i& playerPos)
+{
+	auto visibleColor = sf::Color(0, 0, 0, 0);
+	auto unseenColor = sf::Color(0, 0, 0, 255);
+	auto revealedColor = sf::Color(0, 0, 0, 100);
+
+	for (size_t x = 0; x < _width; x++)
+	{
+		for (size_t y = 0; y < _height; y++)
+		{
+			auto pos = sf::Vector2i(x, y);
+			bool canBeSeen = getLineOfSight(playerPos, pos);
+
+			sf::Vertex* quad = &_fog[(x + y * _width) * 4];
+
+			quad[0].position = sf::Vector2f((float)(x * _tileSize.x), (float)(y * _tileSize.y));
+			quad[1].position = sf::Vector2f((float)((x + 1) * _tileSize.x), (float)(y * _tileSize.y));
+			quad[2].position = sf::Vector2f((float)((x + 1) * _tileSize.x), (float)((y + 1) * _tileSize.y));
+			quad[3].position = sf::Vector2f((float)(x * _tileSize.x), (float)((y + 1) * _tileSize.y));
+
+			if (canBeSeen) {
+
+				quad[0].color = visibleColor;
+				quad[1].color = visibleColor;
+				quad[2].color = visibleColor;
+				quad[3].color = visibleColor;
+
+				_tiles[x][y].visibility = TileVisibility::VISIBLE;
+			}
+			else
+			{
+				switch (_tiles[x][y].visibility)
+				{
+				case TileVisibility::UNSEEN:
+					quad[0].color = unseenColor;
+					quad[1].color = unseenColor;
+					quad[2].color = unseenColor;
+					quad[3].color = unseenColor;
+					break;
+				case TileVisibility::VISIBLE:
+					_tiles[x][y].visibility = TileVisibility::REVEALED;
+				case TileVisibility::REVEALED:
+					quad[0].color = revealedColor;
+					quad[1].color = revealedColor;
+					quad[2].color = revealedColor;
+					quad[3].color = revealedColor;
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 }
