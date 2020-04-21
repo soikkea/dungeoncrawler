@@ -203,7 +203,7 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	// Draw the vertex array
 	target.draw(_vertices, states);
 
-	for (unsigned int i = 0; i < _creatures.size(); i++)
+	for (size_t i = 0; i < _creatures.size(); i++)
 	{
 		_creatures.at(i)->draw(target, states);
 	}
