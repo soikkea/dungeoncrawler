@@ -3,7 +3,7 @@
 #include "globals.h"
 #include "creature.h"
 
-Player::Player(unsigned int x, unsigned int y) :
+Player::Player(int x, int y) :
 	playerCreature(x, y),
 	turnOver_(false)
 {

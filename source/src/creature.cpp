@@ -6,7 +6,7 @@
 #include "hud.h"
 #include "level.h"
 
-Creature::Creature(unsigned int x, unsigned int y) :
+Creature::Creature(int x, int y) :
 	_maxHitPoints(10),
 	_hitPoints(10),
 	_name("Creature"),

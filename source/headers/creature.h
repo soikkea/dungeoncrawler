@@ -7,7 +7,7 @@ class Player;
 class Creature : public Sprite
 {
 public:
-	Creature(unsigned int x, unsigned int y);
+	Creature(int x, int y);
 	virtual ~Creature();
 
 	const int getHitPoints() const;

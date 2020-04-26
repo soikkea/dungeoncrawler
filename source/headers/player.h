@@ -8,7 +8,7 @@ class Level;
 class Player
 {
 public:
-	Player(unsigned int x, unsigned int y);
+	Player(int x, int y);
 
 	bool isTurnOver();
 	void endTurn();
