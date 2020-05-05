@@ -25,6 +25,7 @@ public:
 
 	void update(Level& level, Player& player);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void drawHealth(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	virtual void attackCreature(Creature& target);
 protected:

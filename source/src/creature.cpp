@@ -14,7 +14,8 @@ Creature::Creature(int x, int y) :
 	_level(1),
 	_experience(0),
 	_experienceWorth(50),
-	_experienceReqToNextLevel(100)
+	_experienceReqToNextLevel(100),
+	_seesPlayer(false)
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -129,6 +130,19 @@ void Creature::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	if (_seesPlayer) {
 		target.draw(_sightLine, states);
 	}
+
+	drawHealth(target, states);
+}
+
+void Creature::drawHealth(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	const auto width = (float)globals::TILE_SIZE * (_hitPoints / (float)_maxHitPoints);
+	sf::RectangleShape healthBar(sf::Vector2f(width, 5.f));
+	healthBar.setFillColor(sf::Color::Red);
+	
+	states.transform *= getTransform();
+
+	target.draw(healthBar, states);
 }
 
 void Creature::attackCreature(Creature & target)
