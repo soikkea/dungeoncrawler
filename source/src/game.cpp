@@ -55,16 +55,16 @@ void Game::gameLoop() {
 					m_window->close();
 					break;
 				case sf::Keyboard::W:
-					m_player.handleMoveInput(NORTH, _level);
+					m_player.handleMoveInput(Direction::NORTH, _level);
 					break;
 				case sf::Keyboard::D:
-					m_player.handleMoveInput(EAST, _level);
+					m_player.handleMoveInput(Direction::EAST, _level);
 					break;
 				case sf::Keyboard::S:
-					m_player.handleMoveInput(SOUTH, _level);
+					m_player.handleMoveInput(Direction::SOUTH, _level);
 					break;
 				case sf::Keyboard::A:
-					m_player.handleMoveInput(WEST, _level);
+					m_player.handleMoveInput(Direction::WEST, _level);
 					break;
 				default:
 					break;

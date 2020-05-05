@@ -10,7 +10,7 @@ namespace globals {
 	const int TILE_SIZE = 32;
 }
 
-enum Direction {
+enum class Direction {
 	NORTH,
 	EAST,
 	SOUTH,
@@ -20,16 +20,16 @@ enum Direction {
 inline sf::Vector2i getDirectionUnitVector(Direction direction) {
 	switch (direction)
 	{
-	case NORTH:
+	case Direction::NORTH:
 		return sf::Vector2i(0, -1);
 		break;
-	case EAST:
+	case Direction::EAST:
 		return sf::Vector2i(1, 0);
 		break;
-	case SOUTH:
+	case Direction::SOUTH:
 		return sf::Vector2i(0, 1);
 		break;
-	case WEST:
+	case Direction::WEST:
 		return sf::Vector2i(-1, 0);
 		break;
 	default:
