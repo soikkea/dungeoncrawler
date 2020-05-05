@@ -191,6 +191,7 @@ void Level::update(Player& player)
 		if (!(*it)->isAlive()) {
 			_deadCreatures.push_back(std::move(*it));
 			it = _creatures.erase(it);
+			if (it == _creatures.end()) break;
 		}
 		it++;
 	}
