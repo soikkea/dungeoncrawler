@@ -1,8 +1,11 @@
 #pragma once
 
+#include <memory>
+
 #include "sprite.h"
 
 class Player;
+class Weapon;
 
 class Creature : public Sprite
 {
@@ -22,6 +25,8 @@ public:
 	const int getExpRequiredToNextLevel() const;
 	void gainExperience(int amount);
 	void gainLevel(int amount);
+	void equipWeapon(std::unique_ptr<Weapon> weapon);
+	const int getDamage() const;
 
 	void update(Level& level, Player& player);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -36,6 +41,7 @@ protected:
 	int _experience;
 	int _experienceWorth;
 	int _experienceReqToNextLevel;
+	std::unique_ptr<Weapon> _equippedWeapon;
 
 	sf::VertexArray _sightLine;
 	bool _seesPlayer;

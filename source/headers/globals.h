@@ -50,3 +50,7 @@ inline bool getOverlap(const int a1, const int a2, const int b1, const int b2, i
 inline int intDistance(const sf::Vector2i& a, const sf::Vector2i& b) {
 	return std::max(std::abs(a.x - b.x), std::abs(a.y - b.y));
 }
+
+inline int tileDistance(const sf::Vector2i& a, const sf::Vector2i& b) {
+	return std::abs(a.x - b.x) + std::abs(a.y - b.y);
+}

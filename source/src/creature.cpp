@@ -5,6 +5,7 @@
 #include "player.h"
 #include "hud.h"
 #include "level.h"
+#include "item.h"
 
 Creature::Creature(int x, int y) :
 	_maxHitPoints(10),
@@ -15,7 +16,8 @@ Creature::Creature(int x, int y) :
 	_experience(0),
 	_experienceWorth(50),
 	_experienceReqToNextLevel(100),
-	_seesPlayer(false)
+	_seesPlayer(false),
+	_equippedWeapon(std::make_unique<Weapon>("Fists", 0, 1, 50))
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -99,6 +101,16 @@ void Creature::gainLevel(int amount)
 	Hud::actionLog.push_back(oss.str());
 }
 
+void Creature::equipWeapon(std::unique_ptr<Weapon> weapon)
+{
+	_equippedWeapon = std::move(weapon);
+}
+
+const int Creature::getDamage() const
+{
+	return _equippedWeapon->getDamage();
+}
+
 void Creature::update(Level & level, Player& player)
 {
 	if (!isAlive()) return;
@@ -106,6 +118,11 @@ void Creature::update(Level & level, Player& player)
 	_seesPlayer = level.getLineOfSight(getTilePos(), player.playerCreature.getTilePos());
 
 	_sightLine[1].position = player.playerCreature.getWorldCenter();
+
+	if (tileDistance(getTilePos(), player.playerCreature.getTilePos()) == 1) {
+		attackCreature(player.playerCreature);
+		return;
+	}
 
 	if (intDistance(getTilePos(), player.playerCreature.getTilePos()) <= 1) {
 		return;
@@ -147,12 +164,15 @@ void Creature::drawHealth(sf::RenderTarget& target, sf::RenderStates states) con
 
 void Creature::attackCreature(Creature & target)
 {
+	int damage = 0;
 	if (intDistance(getTilePos(), target.getTilePos()) <= 1) {
-		target.gainHitpoints(-1);
+		bool hit = _equippedWeapon->onUse(target);
+		if (hit)
+			damage = getDamage();
 	}
 
 	std::ostringstream oss;
-	oss << _name << " attacked " << target.getName() << ", dealing 1 damage." << std::endl;
+	oss << _name << " attacked " << target.getName() << ", dealing " << damage << " damage." << std::endl;
 	Hud::actionLog.push_back(oss.str());
 
 	if (!target.isAlive()) {

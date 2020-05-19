@@ -2,6 +2,7 @@
 #include "level.h"
 #include "globals.h"
 #include "creature.h"
+#include "item.h"
 
 Player::Player(int x, int y) :
 	playerCreature(x, y),
@@ -9,6 +10,7 @@ Player::Player(int x, int y) :
 {
 	playerCreature.setColor(sf::Color::Blue);
 	playerCreature.setName("Player");
+	playerCreature.equipWeapon(std::make_unique<Weapon>("Sword", 1, 2, 100));
 }
 
 bool Player::isTurnOver()
