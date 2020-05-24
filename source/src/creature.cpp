@@ -17,7 +17,7 @@ Creature::Creature(int x, int y) :
 	_experienceWorth(50),
 	_experienceReqToNextLevel(100),
 	_seesPlayer(false),
-	_equippedWeapon(std::make_unique<Weapon>("Fists", 0, 1, 50))
+	_equippedWeapon(std::make_unique<Weapon>("Weak Fists", 0, 1, 50))
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
