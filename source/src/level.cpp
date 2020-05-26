@@ -178,6 +178,19 @@ void Level::populate()
 		auto x = rng::randomIntBetween(room.left + 2, room.left + room.width - 3);
 		auto y = rng::randomIntBetween(room.top + 2, room.top + room.height - 3);
 		_creatures.push_back(std::make_unique<Creature>(x, y));
+
+		// Create item?
+		if (rng::randomInt(1) == 1) {
+			auto xi = x;
+			auto yi = y;
+			while (xi == x && yi == y) {
+				xi = rng::randomIntBetween(room.left + 2, room.left + room.width - 3);
+				yi = rng::randomIntBetween(room.top + 2, room.top + room.height - 3);
+			}
+
+			// TODO: set position for item
+			_items.push_back(std::make_unique<HealthPotion>());
+		}
 	}
 }
 

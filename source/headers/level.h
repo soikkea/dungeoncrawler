@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "bspdungeon.h"
+#include "item.h"
 
 class Creature;
 class Player;
@@ -39,5 +40,6 @@ private:
 	sf::Vector2i _playerStartingPos;
 	std::vector<std::unique_ptr<Creature>> _creatures;
 	std::vector<std::unique_ptr<Creature>> _deadCreatures;
+	std::vector<std::unique_ptr<Item>> _items;
 	std::vector<sf::Rect<int>> _rooms;
 };
