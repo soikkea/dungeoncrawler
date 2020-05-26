@@ -8,6 +8,23 @@ Item::Item(std::string name, int weight) :
 {
 }
 
+HealthPotion::HealthPotion() :
+	Item("HealthPotion", 1)
+{
+}
+
+bool HealthPotion::onInteract(Creature& creature)
+{
+	// TODO: Pick up item
+	return this->onUse(creature);
+}
+
+bool HealthPotion::onUse(Creature& target)
+{
+	target.gainHitpoints(this->_healthAmount);
+	return true;
+}
+
 Weapon::Weapon(std::string name, int weight, int damage, int baseHitChance) :
 	Item(name, weight),
 	_damage(damage),

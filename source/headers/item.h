@@ -17,6 +17,18 @@ private:
 	int _weight;
 };
 
+class HealthPotion : public Item
+{
+public:
+	HealthPotion();
+
+	bool onInteract(Creature& creature) override;
+	bool onUse(Creature& target) override;
+
+private:
+	int _healthAmount = 10;
+};
+
 class Weapon : public Item
 {
 public:
