@@ -8,6 +8,9 @@ namespace rng {
 
 	extern std::mt19937 generator;
 
+	// Return a random int between 0 and i
 	int randomInt(int i);
+
+	// Return a random int between a and b
 	int randomIntBetween(int a, int b);
 }
