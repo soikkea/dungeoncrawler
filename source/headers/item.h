@@ -1,10 +1,14 @@
 #pragma once
 
 #include <string>
+#include <memory>
+
+#include <SFML/Graphics.hpp>
 
 class Creature;
+class Sprite;
 
-class Item
+class Item : public sf::Drawable, public sf::Transformable
 {
 public:
 	Item(std::string name, int weight);
@@ -12,9 +16,15 @@ public:
 	virtual bool onInteract(Creature& creature) { return false; }
 	virtual bool onUse(Creature& target) { return false; }
 
-private:
+	const sf::Vector2i getTilePos() const;
+	void setTilePos(int x, int y);
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+protected:
 	std::string _name;
 	int _weight;
+	std::unique_ptr<Sprite> _sprite;
 };
 
 class HealthPotion : public Item
@@ -25,7 +35,9 @@ public:
 	bool onInteract(Creature& creature) override;
 	bool onUse(Creature& target) override;
 
-private:
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+protected:
 	int _healthAmount = 10;
 };
 
@@ -39,7 +51,7 @@ public:
 
 	const int getDamage() const;
 
-private:
+protected:
 	int _damage;
 	int _baseHitChance;
 };

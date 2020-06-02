@@ -190,6 +190,7 @@ void Level::populate()
 
 			// TODO: set position for item
 			_items.push_back(std::make_unique<HealthPotion>());
+			_items.back()->setTilePos(xi, yi);
 		}
 	}
 }
@@ -225,6 +226,14 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 	// Draw the vertex array
 	target.draw(_vertices, states);
+
+	for (size_t i = 0; i < _items.size(); i++)
+	{
+		auto& item = _items.at(i);
+		auto itemPos = item->getTilePos();
+		if (_tiles[itemPos.x][itemPos.y].visibility == TileVisibility::VISIBLE)
+			item->draw(target, states);
+	}
 
 	for (size_t i = 0; i < _creatures.size(); i++)
 	{
