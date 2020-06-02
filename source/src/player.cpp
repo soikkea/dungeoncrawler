@@ -30,14 +30,16 @@ void Player::resetTurn()
 
 void Player::handleMoveInput(Direction direction, Level & level)
 {
+	auto newPos = playerCreature.getTilePos() + getDirectionUnitVector(direction);
+
 	auto retVal = playerCreature.moveStep(direction, level);
 	if (retVal) {
+		level.useItemAt(newPos.x, newPos.y, playerCreature);
 		endTurn();
 		return;
 	}
 
-	auto newPos = playerCreature.getTilePos() + getDirectionUnitVector(direction);
-
+	// Collision detection
 	for (auto& creature_ptr : level.getCreatures())
 	{
 		if (creature_ptr->getTilePos() == newPos) {

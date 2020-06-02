@@ -219,6 +219,33 @@ const std::vector<std::unique_ptr<Creature>>& Level::getCreatures()
 	return _creatures;
 }
 
+int Level::tileHasItem(int x, int y) const
+{
+	if (_items.size() == 0)
+		return -1;
+
+	for (size_t i = 0; i < _items.size(); i++)
+	{
+		auto itemPos = _items.at(i)->getTilePos();
+		if (itemPos.x == x && itemPos.y == y)
+			return i;
+	}
+	return -1;
+}
+
+bool Level::useItemAt(int x, int y, Creature& user)
+{
+	auto itemIndex = tileHasItem(x, y);
+	if (itemIndex < 0)
+		return false;
+
+	_items.at(itemIndex)->onUse(user);
+
+	_items.erase(_items.begin() + itemIndex);
+
+	return true;
+}
+
 void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	// Apply the transform

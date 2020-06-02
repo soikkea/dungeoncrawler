@@ -26,6 +26,8 @@ public:
 	void populate();
 	void update(Player& player);
 	const std::vector<std::unique_ptr<Creature>>& getCreatures();
+	int tileHasItem(int x, int y) const;
+	bool useItemAt(int x, int y, Creature& user);
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
