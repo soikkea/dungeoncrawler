@@ -19,13 +19,15 @@ public:
 	bool load(const sf::Vector2u tileSize, const Map2D & map);
 	void tmpInit();
 	const sf::Vector2i getPlayerStartingPos() const;
-	bool isEmpty(int x, int y) const;
+	bool tileIsEmpty(int x, int y) const;
+	bool tileBlocksVision(int x, int y) const;
 	const Tile& getTile(int x, int y) const;
 	void setTile(const sf::Vector2i pos, const TileType type);
 	bool getLineOfSight(const sf::Vector2i& start, const sf::Vector2i& end);
 	void populate();
 	void update(Player& player);
 	const std::vector<std::unique_ptr<Creature>>& getCreatures();
+	int tileHasCreature(int x, int y) const;
 	int tileHasItem(int x, int y) const;
 	bool useItemAt(int x, int y, Creature& user);
 private:

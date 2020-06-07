@@ -45,7 +45,7 @@ bool Sprite::moveStep(Direction direction, const Level & level)
 	sf::Vector2i directionVector = getDirectionUnitVector(direction);
 	int newX = _tileX + directionVector.x;
 	int newY = _tileY + directionVector.y;
-	if (!level.isEmpty(newX, newY)) return false;
+	if (!level.tileIsEmpty(newX, newY)) return false;
 	setTilePos(newX, newY);
 	return true;
 }

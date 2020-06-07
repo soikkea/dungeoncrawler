@@ -104,17 +104,20 @@ const sf::Vector2i Level::getPlayerStartingPos() const
 	return _playerStartingPos;
 }
 
-bool Level::isEmpty(int x, int y) const
+bool Level::tileIsEmpty(int x, int y) const
 {
-	if (x >= _width || y >= _height) return false;
-	auto tile = getTile(x, y);
-	if (tile.type == TileType::WALL) return false;
-	for (auto& creature : _creatures)
-	{
-		sf::Vector2i creaturePos = creature->getTilePos();
-		if (creaturePos.x == x && creaturePos.y == y) return false;
-	}
+	if (tileBlocksVision(x, y)) return false;
+	if (tileHasItem(x, y) >= 0) return false;
 	return true;
+}
+
+bool Level::tileBlocksVision(int x, int y) const
+{
+	if (x >= _width || y >= _height) return true;
+	auto tile = getTile(x, y);
+	if (tile.type == TileType::WALL) return true;
+	if (tileHasCreature(x, y) >= 0) return true;
+	return false;
 }
 
 const Tile& Level::getTile(int x, int y) const
@@ -153,11 +156,11 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 	while (s != sEnd) {
 		if (loopOverX) {
 			// s, t
-			if (!isEmpty(s, t)) return false;
+			if (tileBlocksVision(s, t)) return false;
 		}
 		else {
 			// t, s
-			if (!isEmpty(t, s)) return false;
+			if (tileBlocksVision(t, s)) return false;
 		}
 		error = error + height;
 		if (error >= width) {
@@ -217,6 +220,20 @@ void Level::update(Player& player)
 const std::vector<std::unique_ptr<Creature>>& Level::getCreatures()
 {
 	return _creatures;
+}
+
+int Level::tileHasCreature(int x, int y) const
+{
+	if (_creatures.size() == 0)
+		return -1;
+
+	for (size_t i = 0; i < _creatures.size(); i++)
+	{
+		auto creaturePos = _creatures.at(i)->getTilePos();
+		if (creaturePos.x == x && creaturePos.y == y)
+			return i;
+	}
+	return -1;
 }
 
 int Level::tileHasItem(int x, int y) const

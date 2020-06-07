@@ -34,7 +34,12 @@ void Player::handleMoveInput(Direction direction, Level & level)
 
 	auto retVal = playerCreature.moveStep(direction, level);
 	if (retVal) {
+		endTurn();
+		return;
+	}
+	else if (level.tileHasItem(newPos.x, newPos.y) >= 0) {
 		level.useItemAt(newPos.x, newPos.y, playerCreature);
+		playerCreature.moveStep(direction, level);
 		endTurn();
 		return;
 	}
