@@ -75,6 +75,39 @@ void Hud::draw(sf::RenderWindow & window, const Level& level)
 	window.draw(level);
 }
 
+void Hud::drawInventory(sf::RenderWindow& window, Player& player)
+{
+	auto view = window.getDefaultView();
+
+	auto viewSize = view.getSize();
+
+	window.setView(view);
+
+	auto backgroundSize = viewSize * 0.9f;
+
+	sf::RectangleShape background(backgroundSize);
+
+	background.setFillColor(sf::Color::Black);
+	background.setOutlineThickness(5);
+	background.setOutlineColor(sf::Color::Blue);
+	background.move((viewSize - backgroundSize) * 0.5f);
+
+	window.draw(background);
+
+	auto title = createText("INVENTORY", 150.f, 50.f, 18);
+	window.draw(title);
+
+	auto& playerInventory = player.playerCreature.getInventory();
+
+	int i = 0;
+	for each (auto& itemPtr in playerInventory)
+	{
+		auto itemText = createText(std::to_string(i + 1) + ". " + itemPtr->getName(), 150.f, 100.f + i * 50.f, 16);
+		window.draw(itemText);
+		i++;
+	}
+}
+
 void Hud::update(float elapsedTime, const Player& player)
 {
 	_miniMapView.setCenter(player.playerCreature.getWorldCenter());
@@ -117,4 +150,16 @@ Hud & Hud::operator=(const Hud & other)
 	_logText = other._logText;
 	_logText.setFont(_font);
 	return *this;
+}
+
+sf::Text Hud::createText(std::string text, float xPos, float yPos, int size)
+{
+	auto sfText = sf::Text();
+	sfText.setFont(_font);
+	sfText.setFillColor(sf::Color::White);
+	sfText.setCharacterSize(size);
+	sfText.setPosition(xPos, yPos);
+	sfText.setString(text);
+
+	return sfText;
 }

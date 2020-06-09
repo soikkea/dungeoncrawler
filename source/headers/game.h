@@ -14,6 +14,15 @@ private:
 	void draw();
 	void update(float elapsedTime);
 
+	enum
+	{
+		MODE_GAME,
+		MODE_INVENTORY,
+		MODE_SKILLS,
+		MODE_MENU
+	};
+
+	int _gameMode = MODE_GAME;
 	sf::RenderWindow* m_window;
 	Player m_player;
 	Level _level;

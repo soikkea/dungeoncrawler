@@ -66,6 +66,19 @@ void Game::gameLoop() {
 				case sf::Keyboard::A:
 					m_player.handleMoveInput(Direction::WEST, _level);
 					break;
+				case sf::Keyboard::I:
+					switch (_gameMode)
+					{
+					case MODE_GAME:
+						_gameMode = MODE_INVENTORY;
+						break;
+					case MODE_INVENTORY:
+						_gameMode = MODE_GAME;
+						break;
+					default:
+						break;
+					}
+					break;
 				default:
 					break;
 				}
@@ -92,6 +105,10 @@ void Game::draw() {
 	m_window->draw(m_player.playerCreature);
 
 	_hud.draw(*m_window, _level);
+
+	if (_gameMode == MODE_INVENTORY) {
+		_hud.drawInventory(*m_window, m_player);
+	}
 
 	m_window->display();
 }

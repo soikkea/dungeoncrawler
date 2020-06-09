@@ -19,6 +19,8 @@ public:
 	const sf::Vector2i getTilePos() const;
 	void setTilePos(int x, int y);
 
+	const std::string getName() const;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:

@@ -15,11 +15,14 @@ public:
 	Hud(const Hud& otherHud);
 	~Hud();
 	void draw(sf::RenderWindow& window, const Level& level);
+	void drawInventory(sf::RenderWindow& window, Player& player);
 	void update(float elapsedTime, const Player& player);
 
 	std::string getActionLogString();
 
 	Hud& operator=(const Hud& other);
+
+	sf::Text createText(std::string text, float xPos, float yPos, int size);
 
 	static std::list<std::string> actionLog;
 private:

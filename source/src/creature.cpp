@@ -108,7 +108,7 @@ void Creature::equipWeapon(std::unique_ptr<Weapon> weapon)
 
 std::vector<std::unique_ptr<Item>>& Creature::getInventory()
 {
-	return this->_inventory;
+	return _inventory;
 }
 
 const int Creature::getDamage() const

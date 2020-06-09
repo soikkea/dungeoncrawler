@@ -20,6 +20,11 @@ void Item::setTilePos(int x, int y)
 	this->_sprite->setTilePos(x, y);
 }
 
+const std::string Item::getName() const
+{
+	return _name;
+}
+
 void Item::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	this->_sprite->draw(target, states);
