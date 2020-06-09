@@ -5,6 +5,7 @@
 #include "sprite.h"
 
 class Player;
+class Item;
 class Weapon;
 
 class Creature : public Sprite
@@ -26,6 +27,7 @@ public:
 	void gainExperience(int amount);
 	void gainLevel(int amount);
 	void equipWeapon(std::unique_ptr<Weapon> weapon);
+	std::vector<std::unique_ptr<Item>>& getInventory();
 	const int getDamage() const;
 
 	void update(Level& level, Player& player);
@@ -42,6 +44,7 @@ protected:
 	int _experienceWorth;
 	int _experienceReqToNextLevel;
 	std::unique_ptr<Weapon> _equippedWeapon;
+	std::vector<std::unique_ptr<Item>> _inventory;
 
 	sf::VertexArray _sightLine;
 	bool _seesPlayer;
