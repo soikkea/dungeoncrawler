@@ -250,17 +250,20 @@ int Level::tileHasItem(int x, int y) const
 	return -1;
 }
 
-bool Level::useItemAt(int x, int y, Creature& user)
+bool Level::pickUpItemAt(int x, int y, Creature& user)
 {
 	auto itemIndex = tileHasItem(x, y);
 	if (itemIndex < 0)
 		return false;
 
-	_items.at(itemIndex)->onUse(user);
+	auto& item = _items.at(itemIndex);
 
-	_items.erase(_items.begin() + itemIndex);
+	if (user.addItem(item)) {
+		_items.erase(_items.begin() + itemIndex);
+		return true;
+	}
 
-	return true;
+	return false;
 }
 
 void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const

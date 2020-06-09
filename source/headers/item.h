@@ -13,7 +13,6 @@ class Item : public sf::Drawable, public sf::Transformable
 public:
 	Item(std::string name, int weight);
 
-	virtual bool onInteract(Creature& creature) { return false; }
 	virtual bool onUse(Creature& target) { return false; }
 
 	const sf::Vector2i getTilePos() const;
@@ -34,7 +33,6 @@ class HealthPotion : public Item
 public:
 	HealthPotion();
 
-	bool onInteract(Creature& creature) override;
 	bool onUse(Creature& target) override;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -48,7 +46,6 @@ class Weapon : public Item
 public:
 	Weapon(std::string name, int weight, int damage, int baseHitChance);
 
-	bool onInteract(Creature& creature) override;
 	bool onUse(Creature& target) override;
 
 	const int getDamage() const;

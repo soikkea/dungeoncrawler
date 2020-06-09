@@ -29,7 +29,7 @@ public:
 	const std::vector<std::unique_ptr<Creature>>& getCreatures();
 	int tileHasCreature(int x, int y) const;
 	int tileHasItem(int x, int y) const;
-	bool useItemAt(int x, int y, Creature& user);
+	bool pickUpItemAt(int x, int y, Creature& user);
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

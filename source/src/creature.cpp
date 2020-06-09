@@ -111,6 +111,17 @@ std::vector<std::unique_ptr<Item>>& Creature::getInventory()
 	return _inventory;
 }
 
+bool Creature::addItem(std::unique_ptr<Item>& item)
+{
+	// TODO: No magic numbers
+	if (_inventory.size() >= 5)
+		return false;
+
+	_inventory.push_back(std::move(item));
+
+	return true;
+}
+
 const int Creature::getDamage() const
 {
 	return _equippedWeapon->getDamage();

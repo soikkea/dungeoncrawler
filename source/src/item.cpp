@@ -31,14 +31,8 @@ void Item::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 HealthPotion::HealthPotion() :
-	Item("HealthPotion", 1)
+	Item("Health Potion", 1)
 {
-}
-
-bool HealthPotion::onInteract(Creature& creature)
-{
-	// TODO: Pick up item
-	return this->onUse(creature);
 }
 
 bool HealthPotion::onUse(Creature& target)
@@ -66,12 +60,6 @@ Weapon::Weapon(std::string name, int weight, int damage, int baseHitChance) :
 		_baseHitChance = 0;
 	if (_baseHitChance > 100)
 		_baseHitChance = 100;
-}
-
-bool Weapon::onInteract(Creature& creature)
-{
-	// TODO: Equip the weapon
-	return false;
 }
 
 bool Weapon::onUse(Creature& target)

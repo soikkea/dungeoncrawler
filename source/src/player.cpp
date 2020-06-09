@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "creature.h"
 #include "item.h"
+#include "hud.h"
 
 Player::Player(int x, int y) :
 	playerCreature(x, y),
@@ -38,9 +39,14 @@ void Player::handleMoveInput(Direction direction, Level & level)
 		return;
 	}
 	else if (level.tileHasItem(newPos.x, newPos.y) >= 0) {
-		level.useItemAt(newPos.x, newPos.y, playerCreature);
-		playerCreature.moveStep(direction, level);
-		endTurn();
+		if (level.pickUpItemAt(newPos.x, newPos.y, playerCreature)) {
+			// Picked up item
+			auto text = playerCreature.getName() + " picked up " + playerCreature.getInventory().back()->getName() + "\n";
+			Hud::actionLog.push_back(text);
+
+			playerCreature.moveStep(direction, level);
+			endTurn();
+		}
 		return;
 	}
 
