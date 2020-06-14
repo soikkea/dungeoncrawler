@@ -29,6 +29,7 @@ public:
 	void equipWeapon(std::unique_ptr<Weapon> weapon);
 	std::vector<std::unique_ptr<Item>>& getInventory();
 	bool addItem(std::unique_ptr<Item>& item);
+	bool useInventoryItem(int itemIndex);
 	const int getDamage() const;
 
 	void update(Level& level, Player& player);

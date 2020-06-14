@@ -122,6 +122,16 @@ bool Creature::addItem(std::unique_ptr<Item>& item)
 	return true;
 }
 
+bool Creature::useInventoryItem(int itemIndex)
+{
+	if (_inventory.size() <= itemIndex)
+		return false;
+	if (_inventory[itemIndex]->onUse(*this)) {
+		_inventory.erase(_inventory.begin() + itemIndex);
+	}
+	return false;
+}
+
 const int Creature::getDamage() const
 {
 	return _equippedWeapon->getDamage();
