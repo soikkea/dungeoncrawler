@@ -13,6 +13,8 @@ private:
 	void gameLoop();
 	void draw();
 	void update(float elapsedTime);
+	bool handleGameEvent(sf::Event& event);
+	bool handleInventoryEvent(sf::Event& event);
 
 	enum
 	{

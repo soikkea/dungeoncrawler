@@ -54,30 +54,16 @@ void Game::gameLoop() {
 				case sf::Keyboard::Escape:
 					m_window->close();
 					break;
-				case sf::Keyboard::W:
-					m_player.handleMoveInput(Direction::NORTH, _level);
+				default:
 					break;
-				case sf::Keyboard::D:
-					m_player.handleMoveInput(Direction::EAST, _level);
+				}
+				switch (_gameMode)
+				{
+				case MODE_GAME:
+					handleGameEvent(event);
 					break;
-				case sf::Keyboard::S:
-					m_player.handleMoveInput(Direction::SOUTH, _level);
-					break;
-				case sf::Keyboard::A:
-					m_player.handleMoveInput(Direction::WEST, _level);
-					break;
-				case sf::Keyboard::I:
-					switch (_gameMode)
-					{
-					case MODE_GAME:
-						_gameMode = MODE_INVENTORY;
-						break;
-					case MODE_INVENTORY:
-						_gameMode = MODE_GAME;
-						break;
-					default:
-						break;
-					}
+				case MODE_INVENTORY:
+					handleInventoryEvent(event);
 					break;
 				default:
 					break;
@@ -91,6 +77,61 @@ void Game::gameLoop() {
 		update(elapsed_time);
 		draw();
 	}
+}
+
+bool Game::handleGameEvent(sf::Event& event) {
+	if (event.type == sf::Event::KeyPressed) {
+		switch (event.key.code)
+		{
+		case sf::Keyboard::W:
+			m_player.handleMoveInput(Direction::NORTH, _level);
+			return true;
+		case sf::Keyboard::D:
+			m_player.handleMoveInput(Direction::EAST, _level);
+			return true;
+		case sf::Keyboard::S:
+			m_player.handleMoveInput(Direction::SOUTH, _level);
+			return true;
+		case sf::Keyboard::A:
+			m_player.handleMoveInput(Direction::WEST, _level);
+			return true;
+		case sf::Keyboard::I:
+			_gameMode = MODE_INVENTORY;
+			return true;
+		default:
+			break;
+		}
+	}
+	return false;
+}
+
+bool Game::handleInventoryEvent(sf::Event& event) {
+	if (event.type == sf::Event::KeyPressed) {
+		switch (event.key.code)
+		{
+		case sf::Keyboard::Num1:
+			m_player.playerCreature.useInventoryItem(0);
+			return true;
+		case sf::Keyboard::Num2:
+			m_player.playerCreature.useInventoryItem(1);
+			return true;
+		case sf::Keyboard::Num3:
+			m_player.playerCreature.useInventoryItem(2);
+			return true;
+		case sf::Keyboard::Num4:
+			m_player.playerCreature.useInventoryItem(3);
+			return true;
+		case sf::Keyboard::Num5:
+			m_player.playerCreature.useInventoryItem(4);
+			return true;
+		case sf::Keyboard::I:
+			_gameMode = MODE_GAME;
+			return true;
+		default:
+			break;
+		}
+	}
+	return false;
 }
 
 void Game::draw() {
