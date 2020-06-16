@@ -65,6 +65,9 @@ void Game::gameLoop() {
 				case MODE_INVENTORY:
 					handleInventoryEvent(event);
 					break;
+				case MODE_SKILLS:
+					handleSkillsEvent(event);
+					break;
 				default:
 					break;
 				}
@@ -97,6 +100,9 @@ bool Game::handleGameEvent(sf::Event& event) {
 			return true;
 		case sf::Keyboard::I:
 			_gameMode = MODE_INVENTORY;
+			return true;
+		case sf::Keyboard::C:
+			_gameMode = MODE_SKILLS;
 			return true;
 		default:
 			break;
@@ -134,6 +140,20 @@ bool Game::handleInventoryEvent(sf::Event& event) {
 	return false;
 }
 
+bool Game::handleSkillsEvent(sf::Event& event) {
+	if (event.type == sf::Event::KeyPressed) {
+		switch (event.key.code)
+		{
+		case sf::Keyboard::C:
+			_gameMode = MODE_GAME;
+			return true;
+		default:
+			break;
+		}
+	}
+	return false;
+}
+
 void Game::draw() {
 	m_window->clear();
 
@@ -149,6 +169,10 @@ void Game::draw() {
 
 	if (_gameMode == MODE_INVENTORY) {
 		_hud.drawInventory(*m_window, m_player);
+	}
+	else if (_gameMode == MODE_SKILLS)
+	{
+		_hud.drawSkills(*m_window, m_player);
 	}
 
 	m_window->display();

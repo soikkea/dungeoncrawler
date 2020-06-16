@@ -16,6 +16,7 @@ public:
 	~Hud();
 	void draw(sf::RenderWindow& window, const Level& level);
 	void drawInventory(sf::RenderWindow& window, Player& player);
+	void drawSkills(sf::RenderWindow& window, Player& player);
 	void update(float elapsedTime, const Player& player);
 
 	std::string getActionLogString();

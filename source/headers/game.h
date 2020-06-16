@@ -15,6 +15,7 @@ private:
 	void update(float elapsedTime);
 	bool handleGameEvent(sf::Event& event);
 	bool handleInventoryEvent(sf::Event& event);
+	bool handleSkillsEvent(sf::Event& event);
 
 	enum
 	{

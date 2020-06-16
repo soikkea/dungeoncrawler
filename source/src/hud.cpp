@@ -108,6 +108,63 @@ void Hud::drawInventory(sf::RenderWindow& window, Player& player)
 	}
 }
 
+void Hud::drawSkills(sf::RenderWindow& window, Player& player)
+{
+	auto view = window.getDefaultView();
+
+	auto viewSize = view.getSize();
+
+	window.setView(view);
+
+	auto backgroundSize = viewSize * 0.9f;
+
+	sf::RectangleShape background(backgroundSize);
+
+	background.setFillColor(sf::Color::Black);
+	background.setOutlineThickness(5);
+	background.setOutlineColor(sf::Color::Blue);
+	background.move((viewSize - backgroundSize) * 0.5f);
+
+	window.draw(background);
+
+	auto title = createText("Character Sheet", 150.f, 50.f, 18);
+	window.draw(title);
+
+	auto& playerSkillSet = player.playerCreature.getSkillSet();
+
+	auto attributeTitle = createText("Attributes", 150.f, 70.f, 17);
+	window.draw(attributeTitle);
+
+	sf::Text text;
+
+	text = createText("Agility", 150.f, 90.f, 16);
+	window.draw(text);
+
+	text = createText(std::to_string(playerSkillSet.attributes[Attribute::AGILITY]), 300.f, 90.f, 16);
+	window.draw(text);
+
+	text = createText("Constitution", 150.f, 110.f, 16);
+	window.draw(text);
+
+	text = createText(std::to_string(playerSkillSet.attributes[Attribute::CONSTITUTION]), 300.f, 110.f, 16);
+	window.draw(text);
+
+	text = createText("Strength", 150.f, 130.f, 16);
+	window.draw(text);
+
+	text = createText(std::to_string(playerSkillSet.attributes[Attribute::STRENGTH]), 300.f, 130.f, 16);
+	window.draw(text);
+
+	auto skillsTitle = createText("Skills", 150.f, 150.f, 17);
+	window.draw(skillsTitle);
+
+	text = createText("Strength", 150.f, 170.f, 16);
+	window.draw(text);
+
+	text = createText(std::to_string(playerSkillSet.skills[Skill::MELEE]), 300.f, 170.f, 16);
+	window.draw(text);
+}
+
 void Hud::update(float elapsedTime, const Player& player)
 {
 	_miniMapView.setCenter(player.playerCreature.getWorldCenter());
