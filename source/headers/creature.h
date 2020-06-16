@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "sprite.h"
+#include "skillset.h"
 
 class Player;
 class Item;
@@ -31,6 +32,7 @@ public:
 	bool addItem(std::unique_ptr<Item>& item);
 	bool useInventoryItem(int itemIndex);
 	const int getDamage() const;
+	SkillSet& getSkillSet();
 
 	void update(Level& level, Player& player);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -47,6 +49,7 @@ protected:
 	int _experienceReqToNextLevel;
 	std::unique_ptr<Weapon> _equippedWeapon;
 	std::vector<std::unique_ptr<Item>> _inventory;
+	SkillSet _skillSet;
 
 	sf::VertexArray _sightLine;
 	bool _seesPlayer;

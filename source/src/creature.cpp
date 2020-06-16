@@ -17,7 +17,8 @@ Creature::Creature(int x, int y) :
 	_experienceWorth(50),
 	_experienceReqToNextLevel(100),
 	_seesPlayer(false),
-	_equippedWeapon(std::make_unique<Weapon>("Weak Fists", 0, 1, 50))
+	_equippedWeapon(std::make_unique<Weapon>("Weak Fists", 0, 1, 50)),
+	_skillSet()
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -135,6 +136,10 @@ bool Creature::useInventoryItem(int itemIndex)
 const int Creature::getDamage() const
 {
 	return _equippedWeapon->getDamage();
+}
+
+SkillSet& Creature::getSkillSet() {
+	return _skillSet;
 }
 
 void Creature::update(Level & level, Player& player)
