@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include "globals.h"
+#include "assets.h"
 
 Game::Game() : 
 	m_player(0, 0)
@@ -13,12 +14,14 @@ Game::Game() :
 
 	m_window->setView(*_gameView);
 
-	_hud = Hud(
+	Assets::get().LoadTextures();
+
+	_hud = std::move(Hud(
 		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH * 0.8f, globals::SCREEN_HEIGHT * 0.2f),
 		sf::FloatRect(0.f, 0.8f, 1.f, 0.2f),
 		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT),
 		sf::FloatRect(0.8f, 0.8f, 0.2f, 0.2f)
-	);
+	));
 
 	// PLACEHOLDER: init level
 	_level = Level();
