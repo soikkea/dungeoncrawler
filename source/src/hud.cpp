@@ -1,5 +1,6 @@
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 #include "hud.h"
 #include "player.h"
@@ -43,9 +44,13 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 	_logText.setCharacterSize(16);
 	_logText.setPosition(150.f, 0.f);
 
+	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 92.f), "increment_agility"));
+	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 112.f), "increment_constitution"));
+	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 132.f), "increment_strength"));
+	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 172.f), "increment_melee"));
 }
 
-Hud::Hud(const Hud & otherHud) :
+Hud::Hud(Hud & otherHud) :
 	_infoView(otherHud._infoView),
 	_miniMapView(otherHud._miniMapView),
 	_infoViewPort(otherHud._infoViewPort),
@@ -53,6 +58,20 @@ Hud::Hud(const Hud & otherHud) :
 	_font(otherHud._font),
 	_text(otherHud._text),
 	_logText(otherHud._logText)
+{
+	_text.setFont(_font);
+	_logText.setFont(_font);
+}
+
+Hud::Hud(Hud&& otherHud) noexcept :
+	_infoView(std::move(otherHud._infoView)),
+	_miniMapView(std::move(otherHud._miniMapView)),
+	_infoViewPort(std::move(otherHud._infoViewPort)),
+	_miniMapViewPort(std::move(otherHud._miniMapViewPort)),
+	_font(std::move(otherHud._font)),
+	_text(std::move(otherHud._text)),
+	_logText(std::move(otherHud._logText)),
+	_skillsButtons(std::move(otherHud._skillsButtons))
 {
 	_text.setFont(_font);
 	_logText.setFont(_font);
@@ -158,11 +177,16 @@ void Hud::drawSkills(sf::RenderWindow& window, Player& player)
 	auto skillsTitle = createText("Skills", 150.f, 150.f, 17);
 	window.draw(skillsTitle);
 
-	text = createText("Strength", 150.f, 170.f, 16);
+	text = createText("Melee", 150.f, 170.f, 16);
 	window.draw(text);
 
 	text = createText(std::to_string(playerSkillSet.skills[Skill::MELEE]), 300.f, 170.f, 16);
 	window.draw(text);
+
+	for each (auto& button in _skillsButtons)
+	{
+		window.draw(*button.get());
+	}
 }
 
 void Hud::update(float elapsedTime, const Player& player)
@@ -193,7 +217,7 @@ std::string Hud::getActionLogString()
 	return logString;
 }
 
-Hud & Hud::operator=(const Hud & other)
+Hud & Hud::operator=(Hud & other)
 {
 	if (&other == this)
 		return *this;
@@ -206,6 +230,20 @@ Hud & Hud::operator=(const Hud & other)
 	_text.setFont(_font);
 	_logText = other._logText;
 	_logText.setFont(_font);
+	return *this;
+}
+
+Hud& Hud::operator=(Hud&& other) noexcept
+{
+	_infoView = std::move(other._infoView);
+	_miniMapView = std::move(other._miniMapView);
+	_infoViewPort = std::move(other._infoViewPort);
+	_font = std::move(other._font);
+	_text = std::move(other._text);
+	_text.setFont(_font);
+	_logText = std::move(other._logText);
+	_logText.setFont(_font);
+	_skillsButtons = std::move(other._skillsButtons);
 	return *this;
 }
 

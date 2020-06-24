@@ -1,8 +1,12 @@
 #pragma once
 
 #include <list>
+#include <vector>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
+
+#include "hudbutton.h"
 
 class Player;
 class Level;
@@ -12,7 +16,8 @@ public:
 	Hud();
 	Hud(const sf::FloatRect& infoViewSize, const sf::FloatRect& infoViewPort, 
 		const sf::FloatRect& miniMapViewSize, const sf::FloatRect& miniMapViewPort);
-	Hud(const Hud& otherHud);
+	Hud(Hud& otherHud);
+	Hud(Hud&& otherHud) noexcept;
 	~Hud();
 	void draw(sf::RenderWindow& window, const Level& level);
 	void drawInventory(sf::RenderWindow& window, Player& player);
@@ -21,7 +26,8 @@ public:
 
 	std::string getActionLogString();
 
-	Hud& operator=(const Hud& other);
+	Hud& operator=(Hud& other);
+	Hud& operator=(Hud&& other) noexcept;
 
 	sf::Text createText(std::string text, float xPos, float yPos, int size);
 
@@ -34,4 +40,5 @@ private:
 	sf::Font _font;
 	sf::Text _text;
 	sf::Text _logText;
+	std::vector<std::unique_ptr<HudButton>> _skillsButtons;
 };
