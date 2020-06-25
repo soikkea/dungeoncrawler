@@ -1,6 +1,8 @@
 #include "skillset.h"
 
-SkillSet::SkillSet()
+SkillSet::SkillSet() :
+	skillPoints(0),
+	attributePoints(0)
 {
 	attributes[Attribute::AGILITY] = 1;
 	attributes[Attribute::CONSTITUTION] = 1;
@@ -10,10 +12,16 @@ SkillSet::SkillSet()
 
 void SkillSet::increaseAttribute(Attribute attribute, int value)
 {
+	if (attributePoints < value)
+		return;
+	attributePoints -= value;
 	attributes[attribute] += value;
 }
 
 void SkillSet::increaseSkill(Skill skill, int value)
 {
+	if (skillPoints < value)
+		return;
+	skillPoints -= value;
 	skills[skill] += value;
 }

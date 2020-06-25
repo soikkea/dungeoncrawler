@@ -94,6 +94,8 @@ void Creature::gainLevel(int amount)
 	for (int i = 0; i < amount; i++) {
 		_level++;
 		_experienceReqToNextLevel = (int)(_experienceReqToNextLevel * 2.1f);
+		_skillSet.gainSkillPoints();
+		_skillSet.gainAttributePoints();
 	}
 	gainHitpoints(_maxHitPoints);
 
