@@ -12,6 +12,8 @@ HudButton::HudButton(const sf::Vector2f& position,
 
 void HudButton::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	if (!active)
+		return;
 	target.draw(sprite);
 }
 

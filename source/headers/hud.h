@@ -1,8 +1,9 @@
 #pragma once
 
 #include <list>
-#include <vector>
+#include <map>
 #include <memory>
+#include <string>
 
 #include <SFML/Graphics.hpp>
 
@@ -40,5 +41,5 @@ private:
 	sf::Font _font;
 	sf::Text _text;
 	sf::Text _logText;
-	std::vector<std::unique_ptr<HudButton>> _skillsButtons;
+	std::map<std::string, std::unique_ptr<HudButton>> _skillsButtons;
 };

@@ -44,10 +44,15 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 	_logText.setCharacterSize(16);
 	_logText.setPosition(150.f, 0.f);
 
-	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 92.f), "increment_agility"));
-	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 112.f), "increment_constitution"));
-	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 132.f), "increment_strength"));
-	_skillsButtons.push_back(std::make_unique<IncrementButton>(sf::Vector2f(320.f, 172.f), "increment_melee"));
+	auto addIncrementButton = [&](sf::Vector2f position, std::string name)
+	{
+		_skillsButtons[name] = std::make_unique<IncrementButton>(position, name);
+	};
+
+	addIncrementButton(sf::Vector2f(320.f, 92.f), "increment_attr_agility");
+	addIncrementButton(sf::Vector2f(320.f, 112.f), "increment_attr_constitution");
+	addIncrementButton(sf::Vector2f(320.f, 132.f), "increment_attr_strength");
+	addIncrementButton(sf::Vector2f(320.f, 172.f), "increment_skill_melee");
 }
 
 Hud::Hud(Hud & otherHud) :
@@ -156,6 +161,9 @@ void Hud::drawSkills(sf::RenderWindow& window, Player& player)
 
 	sf::Text text;
 
+	text = createText(std::to_string(playerSkillSet.attributePoints)+ " points", 300.f, 70.f, 17);
+	window.draw(text);
+
 	text = createText("Agility", 150.f, 90.f, 16);
 	window.draw(text);
 
@@ -177,15 +185,26 @@ void Hud::drawSkills(sf::RenderWindow& window, Player& player)
 	auto skillsTitle = createText("Skills", 150.f, 150.f, 17);
 	window.draw(skillsTitle);
 
+	text = createText(std::to_string(playerSkillSet.skillPoints) + " points", 300.f, 150.f, 17);
+	window.draw(text);
+
 	text = createText("Melee", 150.f, 170.f, 16);
 	window.draw(text);
 
 	text = createText(std::to_string(playerSkillSet.skills[Skill::MELEE]), 300.f, 170.f, 16);
 	window.draw(text);
 
-	for each (auto& button in _skillsButtons)
+	for each (auto& pair in _skillsButtons)
 	{
-		window.draw(*button.get());
+		auto& name = pair.first;
+		auto& button = *(pair.second.get());
+		if (name.find("increment_attr_") == 0) {
+			button.active = playerSkillSet.attributePoints > 0;
+		}
+		if (name.find("increment_skill_") == 0) {
+			button.active = playerSkillSet.skillPoints > 0;
+		}
+		window.draw(button);
 	}
 }
 
