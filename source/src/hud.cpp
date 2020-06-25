@@ -222,6 +222,19 @@ void Hud::update(float elapsedTime, const Player& player)
 	_logText.setString(getActionLogString());
 }
 
+std::string const* Hud::getClickedButton(int x, int y)
+{
+	for each (auto& pair in _skillsButtons)
+	{
+		auto& name = pair.first;
+		auto& button = *pair.second.get();
+		if (button.sprite.getGlobalBounds().contains(x, y)) {
+			return (&name);
+		}
+	}
+	return nullptr;
+}
+
 std::string Hud::getActionLogString()
 {
 	while (actionLog.size() > 6) {

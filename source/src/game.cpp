@@ -60,20 +60,20 @@ void Game::gameLoop() {
 				default:
 					break;
 				}
-				switch (_gameMode)
-				{
-				case MODE_GAME:
-					handleGameEvent(event);
-					break;
-				case MODE_INVENTORY:
-					handleInventoryEvent(event);
-					break;
-				case MODE_SKILLS:
-					handleSkillsEvent(event);
-					break;
-				default:
-					break;
-				}
+			}
+			switch (_gameMode)
+			{
+			case MODE_GAME:
+				handleGameEvent(event);
+				break;
+			case MODE_INVENTORY:
+				handleInventoryEvent(event);
+				break;
+			case MODE_SKILLS:
+				handleSkillsEvent(event);
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -152,6 +152,29 @@ bool Game::handleSkillsEvent(sf::Event& event) {
 			return true;
 		default:
 			break;
+		}
+	}
+	else if (event.type == sf::Event::MouseButtonPressed) {
+		if (event.mouseButton.button == sf::Mouse::Left) {
+			auto buttonName = _hud.getClickedButton(event.mouseButton.x, event.mouseButton.y);
+			if (buttonName == nullptr)
+				return true;
+			else if (*buttonName == "increment_attr_agility") {
+				m_player.playerCreature.getSkillSet().increaseAttribute(Attribute::AGILITY);
+				return true;
+			}
+			else if (*buttonName == "increment_attr_constitution") {
+				m_player.playerCreature.getSkillSet().increaseAttribute(Attribute::CONSTITUTION);
+				return true;
+			}
+			else if (*buttonName == "increment_attr_strength") {
+				m_player.playerCreature.getSkillSet().increaseAttribute(Attribute::STRENGTH);
+				return true;
+			}
+			else if (*buttonName == "increment_skill_melee") {
+				m_player.playerCreature.getSkillSet().increaseSkill(Skill::MELEE);
+				return true;
+			}
 		}
 	}
 	return false;

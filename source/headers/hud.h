@@ -25,6 +25,8 @@ public:
 	void drawSkills(sf::RenderWindow& window, Player& player);
 	void update(float elapsedTime, const Player& player);
 
+	std::string const * getClickedButton(int x, int y);
+
 	std::string getActionLogString();
 
 	Hud& operator=(Hud& other);
