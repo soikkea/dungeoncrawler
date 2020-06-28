@@ -8,8 +8,6 @@
 #include "item.h"
 
 Creature::Creature(int x, int y) :
-	_maxHitPoints(10),
-	_hitPoints(10),
 	_name("Creature"),
 	_sightLine(sf::Lines, 2),
 	_level(1),
@@ -18,7 +16,9 @@ Creature::Creature(int x, int y) :
 	_experienceReqToNextLevel(100),
 	_seesPlayer(false),
 	_equippedWeapon(std::make_unique<Weapon>("Weak Fists", 0, 1, 50)),
-	_skillSet()
+	_skillSet(),
+	stats({Stat::createStatPair("hit_points", 10),
+		Stat::createStatPair("movement_points", 1) })
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -30,25 +30,22 @@ Creature::~Creature()
 
 const int Creature::getHitPoints() const
 {
-	return _hitPoints;
+	return stats.at("hit_points").value;
 }
 
 const int Creature::getMaxHitPoints() const
 {
-	return _maxHitPoints;
+	return stats.at("hit_points").maxValue;
 }
 
 void Creature::gainHitpoints(int amount)
 {
-	_hitPoints += amount;
-	if (_hitPoints > _maxHitPoints) {
-		_hitPoints = _maxHitPoints;
-	}
+	stats["hit_points"].addValue(amount);
 }
 
 bool Creature::isAlive() const
 {
-	return _hitPoints > 0;
+	return stats.at("hit_points").value > 0;
 }
 
 const std::string Creature::getName() const
@@ -97,7 +94,7 @@ void Creature::gainLevel(int amount)
 		_skillSet.gainSkillPoints();
 		_skillSet.gainAttributePoints();
 	}
-	gainHitpoints(_maxHitPoints);
+	stats["hit_points"].fill();
 
 	std::ostringstream oss;
 	oss << _name << " leveled up!" << std::endl;
@@ -144,9 +141,26 @@ SkillSet& Creature::getSkillSet() {
 	return _skillSet;
 }
 
+void Creature::startTurn()
+{
+	stats["movement_points"].fill();
+}
+
+bool Creature::moveStep(Direction direction, const Level& level)
+{
+	if (stats["movement_points"].value <= 0)
+		return false;
+	auto success = Sprite::moveStep(direction, level);
+	if (success)
+		stats["movement_points"].value--;
+	return success;
+}
+
 void Creature::update(Level & level, Player& player)
 {
 	if (!isAlive()) return;
+
+	startTurn();
 
 	_seesPlayer = level.getLineOfSight(getTilePos(), player.playerCreature.getTilePos());
 
@@ -186,7 +200,7 @@ void Creature::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 void Creature::drawHealth(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	const auto width = (float)globals::TILE_SIZE * (_hitPoints / (float)_maxHitPoints);
+	const auto width = (float)globals::TILE_SIZE * (stats.at("hit_points").getPercentage());
 	sf::RectangleShape healthBar(sf::Vector2f(width, 5.f));
 	healthBar.setFillColor(sf::Color::Red);
 	

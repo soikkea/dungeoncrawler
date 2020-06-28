@@ -1,9 +1,12 @@
 #pragma once
 
+#include <map>
 #include <memory>
+#include <string>
 
 #include "sprite.h"
 #include "skillset.h"
+#include "stat.h"
 
 class Player;
 class Item;
@@ -33,15 +36,17 @@ public:
 	bool useInventoryItem(int itemIndex);
 	const int getDamage() const;
 	SkillSet& getSkillSet();
+	void startTurn();
+	virtual bool moveStep(Direction direction, const Level& level);
 
 	void update(Level& level, Player& player);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void drawHealth(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	virtual void attackCreature(Creature& target);
+
+	std::map<std::string, Stat> stats;
 protected:
-	int _maxHitPoints;
-	int _hitPoints;
 	std::string _name;
 	int _level;
 	int _experience;

@@ -27,6 +27,7 @@ void Player::endTurn()
 void Player::resetTurn()
 {
 	turnOver_ = false;
+	playerCreature.startTurn();
 }
 
 void Player::handleMoveInput(Direction direction, Level & level)

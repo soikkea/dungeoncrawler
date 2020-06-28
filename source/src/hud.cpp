@@ -217,6 +217,7 @@ void Hud::update(float elapsedTime, const Player& player)
 	playerInfo << "Health: " << player.playerCreature.getHitPoints() << "/" << player.playerCreature.getMaxHitPoints() << std::endl;
 	playerInfo << "Level: " << player.playerCreature.getLevel() << std::endl;
 	playerInfo << "Experience: " << player.playerCreature.getExperience() << "/" << player.playerCreature.getExpRequiredToNextLevel() << std::endl;
+	playerInfo << "Moves: " << player.playerCreature.stats.at("movement_points").value << "/" << player.playerCreature.stats.at("movement_points").maxValue << std::endl;
 	_text.setString(playerInfo.str());
 
 	_logText.setString(getActionLogString());
