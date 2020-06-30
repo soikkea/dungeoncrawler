@@ -22,6 +22,7 @@ public:
 	const int getMaxHitPoints() const;
 	void gainHitpoints(int amount);
 	virtual bool isAlive() const;
+	virtual bool canMove() const;
 	const std::string getName() const;
 	void setName(std::string name);
 	const int getLevel() const;

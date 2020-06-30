@@ -49,6 +49,11 @@ bool Creature::isAlive() const
 	return stats.at(StatEnum::HitPoints).value > 0;
 }
 
+bool Creature::canMove() const
+{
+	return stats.at(StatEnum::MovementPoints).value > 0;
+}
+
 const std::string Creature::getName() const
 {
 	return _name;

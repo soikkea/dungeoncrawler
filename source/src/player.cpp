@@ -16,7 +16,7 @@ Player::Player(int x, int y) :
 
 bool Player::isTurnOver()
 {
-	return turnOver_;
+	return turnOver_ || !playerCreature.canMove();
 }
 
 void Player::endTurn()
@@ -36,7 +36,6 @@ void Player::handleMoveInput(Direction direction, Level & level)
 
 	auto retVal = playerCreature.moveStep(direction, level);
 	if (retVal) {
-		endTurn();
 		return;
 	}
 	else if (level.tileHasItem(newPos.x, newPos.y) >= 0) {
@@ -46,7 +45,6 @@ void Player::handleMoveInput(Direction direction, Level & level)
 			Hud::actionLog.push_back(text);
 
 			playerCreature.moveStep(direction, level);
-			endTurn();
 		}
 		return;
 	}
