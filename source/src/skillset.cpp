@@ -16,6 +16,7 @@ void SkillSet::increaseAttribute(Attribute attribute, int value)
 		return;
 	attributePoints -= value;
 	attributes[attribute] += value;
+	updated = true;
 }
 
 void SkillSet::increaseSkill(Skill skill, int value)
@@ -24,4 +25,5 @@ void SkillSet::increaseSkill(Skill skill, int value)
 		return;
 	skillPoints -= value;
 	skills[skill] += value;
+	updated = true;
 }

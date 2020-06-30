@@ -26,4 +26,6 @@ public:
 
 	void gainSkillPoints(int amount = 1) { skillPoints += amount; };
 	void gainAttributePoints(int amount = 1) { attributePoints += amount; };
+
+	bool updated = false;
 };

@@ -22,6 +22,7 @@ Creature::Creature(int x, int y) :
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
+	calculateStats(true);
 }
 
 Creature::~Creature()
@@ -134,7 +135,7 @@ bool Creature::useInventoryItem(int itemIndex)
 
 const int Creature::getDamage() const
 {
-	return _equippedWeapon->getDamage();
+	return _equippedWeapon->getDamage() + (_skillSet.skills.at(Skill::MELEE) - 1);
 }
 
 SkillSet& Creature::getSkillSet() {
@@ -231,5 +232,15 @@ void Creature::attackCreature(Creature & target)
 		oss2 << _name << " gained " << target.getExperienceWorth() << " experience." << std::endl;
 		Hud::actionLog.push_back(oss2.str());
 		gainExperience(target.getExperienceWorth());
+	}
+}
+
+void Creature::calculateStats(bool force)
+{
+	if (_skillSet.updated || force) {
+		stats[StatEnum::HitPoints].maxValue = _skillSet.attributes[Attribute::CONSTITUTION] * 10;
+		stats[StatEnum::HitPoints].fill();
+		stats[StatEnum::MovementPoints].maxValue = 1 + _skillSet.attributes[Attribute::AGILITY] / 2;
+		_skillSet.updated = false;
 	}
 }

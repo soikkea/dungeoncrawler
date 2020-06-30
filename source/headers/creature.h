@@ -45,6 +45,8 @@ public:
 
 	virtual void attackCreature(Creature& target);
 
+	virtual void calculateStats(bool force = false);
+
 	std::map<StatEnum, Stat> stats;
 protected:
 	std::string _name;
