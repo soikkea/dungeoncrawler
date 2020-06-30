@@ -140,7 +140,7 @@ bool Creature::useInventoryItem(int itemIndex)
 
 const int Creature::getDamage() const
 {
-	return _equippedWeapon->getDamage() + (_skillSet.skills.at(Skill::MELEE) - 1);
+	return _equippedWeapon->getDamage() + (_skillSet.skills.at(Skill::MELEE) - 1) + (_skillSet.attributes.at(Attribute::STRENGTH) / 5);
 }
 
 SkillSet& Creature::getSkillSet() {
