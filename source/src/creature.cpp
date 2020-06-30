@@ -17,8 +17,8 @@ Creature::Creature(int x, int y) :
 	_seesPlayer(false),
 	_equippedWeapon(std::make_unique<Weapon>("Weak Fists", 0, 1, 50)),
 	_skillSet(),
-	stats({Stat::createStatPair("hit_points", 10),
-		Stat::createStatPair("movement_points", 1) })
+	stats({Stat::createStatPair(StatEnum::HitPoints, "hit_points", 10),
+		Stat::createStatPair(StatEnum::MovementPoints, "movement_points", 1) })
 {
 	setTilePos(x, y);
 	setColor(sf::Color::Green);
@@ -30,22 +30,22 @@ Creature::~Creature()
 
 const int Creature::getHitPoints() const
 {
-	return stats.at("hit_points").value;
+	return stats.at(StatEnum::HitPoints).value;
 }
 
 const int Creature::getMaxHitPoints() const
 {
-	return stats.at("hit_points").maxValue;
+	return stats.at(StatEnum::HitPoints).maxValue;
 }
 
 void Creature::gainHitpoints(int amount)
 {
-	stats["hit_points"].addValue(amount);
+	stats[StatEnum::HitPoints].addValue(amount);
 }
 
 bool Creature::isAlive() const
 {
-	return stats.at("hit_points").value > 0;
+	return stats.at(StatEnum::HitPoints).value > 0;
 }
 
 const std::string Creature::getName() const
@@ -94,7 +94,7 @@ void Creature::gainLevel(int amount)
 		_skillSet.gainSkillPoints();
 		_skillSet.gainAttributePoints();
 	}
-	stats["hit_points"].fill();
+	stats[StatEnum::HitPoints].fill();
 
 	std::ostringstream oss;
 	oss << _name << " leveled up!" << std::endl;
@@ -143,16 +143,16 @@ SkillSet& Creature::getSkillSet() {
 
 void Creature::startTurn()
 {
-	stats["movement_points"].fill();
+	stats[StatEnum::MovementPoints].fill();
 }
 
 bool Creature::moveStep(Direction direction, const Level& level)
 {
-	if (stats["movement_points"].value <= 0)
+	if (stats[StatEnum::MovementPoints].value <= 0)
 		return false;
 	auto success = Sprite::moveStep(direction, level);
 	if (success)
-		stats["movement_points"].value--;
+		stats[StatEnum::MovementPoints].value--;
 	return success;
 }
 
@@ -200,7 +200,7 @@ void Creature::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 void Creature::drawHealth(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	const auto width = (float)globals::TILE_SIZE * (stats.at("hit_points").getPercentage());
+	const auto width = (float)globals::TILE_SIZE * (stats.at(StatEnum::HitPoints).getPercentage());
 	sf::RectangleShape healthBar(sf::Vector2f(width, 5.f));
 	healthBar.setFillColor(sf::Color::Red);
 	

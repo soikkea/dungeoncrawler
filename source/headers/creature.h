@@ -45,7 +45,7 @@ public:
 
 	virtual void attackCreature(Creature& target);
 
-	std::map<std::string, Stat> stats;
+	std::map<StatEnum, Stat> stats;
 protected:
 	std::string _name;
 	int _level;

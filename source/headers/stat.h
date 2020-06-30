@@ -3,6 +3,11 @@
 #include <string>
 #include <utility>
 
+enum class StatEnum {
+	HitPoints,
+	MovementPoints
+};
+
 struct Stat
 {
 	Stat() {};
@@ -12,9 +17,9 @@ struct Stat
 		name(name)
 	{
 	};
-	static inline std::pair<std::string, Stat> createStatPair(std::string name, int maxValue)
+	static inline std::pair<StatEnum, Stat> createStatPair(StatEnum stat, std::string name, int maxValue)
 	{
-		return std::make_pair(name, Stat(name, maxValue));
+		return std::make_pair(stat, Stat(name, maxValue));
 	}
 
 	int addValue(int amount);
