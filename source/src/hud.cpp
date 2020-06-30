@@ -271,6 +271,7 @@ Hud& Hud::operator=(Hud&& other) noexcept
 	_infoView = std::move(other._infoView);
 	_miniMapView = std::move(other._miniMapView);
 	_infoViewPort = std::move(other._infoViewPort);
+	_miniMapViewPort = std::move(other._miniMapViewPort);
 	_font = std::move(other._font);
 	_text = std::move(other._text);
 	_text.setFont(_font);
