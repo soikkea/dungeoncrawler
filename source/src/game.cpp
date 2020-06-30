@@ -210,6 +210,8 @@ void Game::update(float elapsedTime) {
 	std::string title = buffer;
 	m_window->setTitle(title);
 
+	m_player.playerCreature.calculateStats();
+
 	if (m_player.isTurnOver()) {
 		_level.update(m_player);
 
