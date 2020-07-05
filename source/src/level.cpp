@@ -52,6 +52,10 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D & map)
 				tileColor = sf::Color::Cyan;
 				_playerStartingPos = sf::Vector2i(i, j);
 				break;
+			case TileType::STAIRS:
+				tileColor = sf::Color::Magenta;
+				_levelEndPos = sf::Vector2i(i, j);
+				break;
 			default:
 				tileColor = sf::Color::Cyan;
 				break;

@@ -17,6 +17,7 @@ enum class TileType
 	FLOOR,
 	WALL,
 	PLAYER,
+	STAIRS
 };
 
 struct Tile

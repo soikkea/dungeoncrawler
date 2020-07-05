@@ -110,6 +110,14 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 
 	map->setTileTypeAt(x, y, TileType::PLAYER);
 
+	auto endRoomIndex = rng::randomIntBetween(1, map->rooms.size() - 1);
+	room = map->rooms[endRoomIndex];
+
+	x = rng::randomIntBetween(room.left + 2, room.left + room.width - 2);
+	y = rng::randomIntBetween(room.top + 2, room.top + room.height - 2);
+
+	map->setTileTypeAt(x, y, TileType::STAIRS);
+
 	return root;
 }
 

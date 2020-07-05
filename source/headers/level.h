@@ -30,6 +30,8 @@ public:
 	int tileHasCreature(int x, int y) const;
 	int tileHasItem(int x, int y) const;
 	bool pickUpItemAt(int x, int y, Creature& user);
+
+	bool endReached = false;
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -42,6 +44,7 @@ private:
 	int _height;
 	std::vector<std::vector<Tile>> _tiles;
 	sf::Vector2i _playerStartingPos;
+	sf::Vector2i _levelEndPos;
 	std::vector<std::unique_ptr<Creature>> _creatures;
 	std::vector<std::unique_ptr<Creature>> _deadCreatures;
 	std::vector<std::unique_ptr<Item>> _items;
