@@ -179,25 +179,24 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 // Populate the level with NPCs
 void Level::populate()
 {
+	auto isNotSpecialTile = [&](sf::Vector2i& pos) {
+		return _playerStartingPos != pos && _levelEndPos != pos;
+	};
 	for (size_t i = 1; i < _rooms.size(); i++)
 	{
 		auto & room = _rooms.at(i);
-		auto x = rng::randomIntBetween(room.left + 2, room.left + room.width - 3);
-		auto y = rng::randomIntBetween(room.top + 2, room.top + room.height - 3);
-		_creatures.push_back(std::make_unique<Creature>(x, y));
+		sf::Vector2i creaturePosition = Map2D::getRandomPointInsideRoom(room);
+		if (isNotSpecialTile(creaturePosition)) {
+			_creatures.push_back(std::make_unique<Creature>(creaturePosition.x, creaturePosition.y));
+		}
 
-		// Create item?
+		// Create item
 		if (rng::randomInt(1) == 1) {
-			auto xi = x;
-			auto yi = y;
-			while (xi == x && yi == y) {
-				xi = rng::randomIntBetween(room.left + 2, room.left + room.width - 3);
-				yi = rng::randomIntBetween(room.top + 2, room.top + room.height - 3);
+			sf::Vector2i itemPosition = Map2D::getRandomPointInsideRoom(room);
+			if (isNotSpecialTile(itemPosition) && itemPosition != creaturePosition) {
+				_items.push_back(std::make_unique<HealthPotion>());
+				_items.back()->setTilePos(itemPosition.x, itemPosition.y);
 			}
-
-			// TODO: set position for item
-			_items.push_back(std::make_unique<HealthPotion>());
-			_items.back()->setTilePos(xi, yi);
 		}
 	}
 }

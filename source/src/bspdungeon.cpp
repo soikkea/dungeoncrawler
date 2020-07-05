@@ -57,6 +57,15 @@ const Tile Map2D::getTileAt(sf::Vector2i point) const
 	return getTileAt(point.x, point.y);
 }
 
+sf::Vector2i Map2D::getRandomPointInsideRoom(sf::Rect<int>& room)
+{
+	auto constexpr wallSize = 1;
+	auto insideRoom = sf::Rect<int>(room.left + wallSize, room.top + wallSize, room.width - 2 * wallSize, room.height - 2 * wallSize);
+	auto x = rng::randomIntBetween(insideRoom.left, insideRoom.left + insideRoom.width - 1);
+	auto y = rng::randomIntBetween(insideRoom.top, insideRoom.top + insideRoom.height - 1);
+	return sf::Vector2i(x, y);
+}
+
 BSPDungeon::BSPDungeon(sf::Rect<int> limits, std::shared_ptr<Map2D> map) :
 	leftChild(),
 	rightChild(),

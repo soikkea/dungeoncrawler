@@ -40,6 +40,7 @@ struct Map2D
 	int height;
 	std::vector<std::vector<Tile>> map;
 	std::vector<sf::Rect<int>> rooms;
+	static sf::Vector2i getRandomPointInsideRoom(sf::Rect<int>& room);
 };
 
 class BSPDungeon
