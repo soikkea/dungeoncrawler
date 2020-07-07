@@ -17,7 +17,7 @@ struct Tile;
 class Level : public sf::Drawable, public sf::Transformable {
 public:
 	bool load(const sf::Vector2u tileSize, const Map2D & map);
-	void tmpInit();
+	void initializeNewDungeon();
 	const sf::Vector2i getPlayerStartingPos() const;
 	bool tileIsEmpty(int x, int y) const;
 	bool tileBlocksVision(int x, int y) const;

@@ -10,6 +10,7 @@ public:
 	Game();
 	~Game();
 private:
+	void initializeNewLevel();
 	void gameLoop();
 	void draw();
 	void update(float elapsedTime);

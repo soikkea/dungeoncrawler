@@ -86,7 +86,7 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D & map)
 	return true;
 }
 
-void Level::tmpInit()
+void Level::initializeNewDungeon()
 {
 	// Placeholder function for initializing the level
 
@@ -181,6 +181,9 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 // Populate the level with NPCs
 void Level::populate()
 {
+	_creatures.clear();
+	_items.clear();
+
 	auto isNotSpecialTile = [&](sf::Vector2i& pos) {
 		return _playerStartingPos != pos && _levelEndPos != pos;
 	};

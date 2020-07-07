@@ -23,13 +23,9 @@ Game::Game() :
 		sf::FloatRect(0.8f, 0.8f, 0.2f, 0.2f)
 	));
 
-	// PLACEHOLDER: init level
 	_level = Level();
-	_level.tmpInit();
-	auto playerPos = _level.getPlayerStartingPos();
 
-	// PLACEHOLDER: init player
-	m_player.playerCreature.setTilePos(playerPos.x, playerPos.y);
+	initializeNewLevel();
 
 	this->gameLoop();
 }
@@ -37,6 +33,16 @@ Game::Game() :
 Game::~Game() {
 	delete m_window;
 	delete _gameView;
+}
+
+void Game::initializeNewLevel()
+{
+	_level.initializeNewDungeon();
+	auto playerPos = _level.getPlayerStartingPos();
+
+	m_player.playerCreature.setTilePos(playerPos.x, playerPos.y);
+
+	m_player.resetTurn();
 }
 
 void Game::gameLoop() {
@@ -216,6 +222,11 @@ void Game::update(float elapsedTime) {
 		_level.update(m_player);
 
 		m_player.resetTurn();
+	}
+
+	if (_level.endReached) {
+		initializeNewLevel();
+		_hud.actionLog.push_back("You descended to a lower level.");
 	}
 
 	_hud.update(elapsedTime, m_player);
