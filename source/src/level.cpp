@@ -81,6 +81,8 @@ bool Level::load(const sf::Vector2u tileSize, const Map2D & map)
 
 	_rooms = map.rooms;
 
+	endReached = false;
+
 	return true;
 }
 
@@ -203,6 +205,10 @@ void Level::populate()
 
 void Level::update(Player& player)
 {
+	if (player.playerCreature.getTilePos() == _levelEndPos) {
+		endReached = true;
+	}
+
 	// Make sure creatures do not walk where the player is
 	setTile(player.playerCreature.getTilePos(), TileType::WALL);
 	auto it = _creatures.begin();
