@@ -15,7 +15,7 @@ file(GLOB SOURCES
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
-add_executable (dungeoncrawler ${SOURCES})
+add_executable(dungeoncrawler ${SOURCES})
 
 target_include_directories(dungeoncrawler PUBLIC
 	"./source/headers"
