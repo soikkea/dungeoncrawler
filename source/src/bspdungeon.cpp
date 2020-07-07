@@ -3,6 +3,7 @@
 #include <queue>
 #include <memory>
 #include <functional>
+#include <stdexcept>
 
 #include "bspdungeon.h"
 #include "level.h"
@@ -73,6 +74,9 @@ BSPDungeon::BSPDungeon(sf::Rect<int> limits, std::shared_ptr<Map2D> map) :
 	limits(limits),
 	room(limits)
 {
+	if (room.width < MIN_ROOM_SIZE || room.height < MIN_ROOM_SIZE) {
+		throw std::invalid_argument("room too small.");
+	}
 }
 
 std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
@@ -301,7 +305,7 @@ void BSPDungeon::generateRoom()
 {
 	// Generate a room inside the node.
 
-	const int MAX_ROOM_SIZE = 6;
+	int constexpr MAX_ROOM_SIZE = 6;
 
 	auto top = limits.top;
 	auto left = limits.left;
@@ -337,6 +341,8 @@ void BSPDungeon::generateRoom()
 			}
 		}
 	}
+
+	assert((room.height >= MIN_ROOM_SIZE) && (room.width >= MIN_ROOM_SIZE));
 
 	map->rooms.push_back(room);
 }
