@@ -79,37 +79,48 @@ BSPDungeon::BSPDungeon(sf::Rect<int> limits, std::shared_ptr<Map2D> map) :
 	}
 }
 
-std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
+std::unique_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, int depth)
 {
 	auto map = std::make_shared<Map2D>(width, height);
 	sf::Rect<int> limits(0, 0, width, height);
-	auto root = std::make_shared<BSPDungeon>(limits, map);
-	std::queue<std::shared_ptr<BSPDungeon>> nodeQueue;
-	std::shared_ptr<BSPDungeon> rootPtr(root);
+	auto root = std::make_unique<BSPDungeon>(limits, map);
+	std::queue<BSPDungeon*> nodeQueue, leafNodes;
+	BSPDungeon* rootPtr = root.get();
 
 	// Split the nodes, down to depth
 	nodeQueue.push(rootPtr);
-	int depthSize = 1;
+	int numberOfNodesAtCurrentDepth = 1;
 	for (int i = 0; i < depth; i++)
 	{
-		int depthSum = 0;
-		for (int d = 0; d < depthSize; d++)
+		int nodesAddedToThisDepth = 0;
+		for (int d = 0; d < numberOfNodesAtCurrentDepth; d++)
 		{
-			auto & node = nodeQueue.front();
-			node->split();
-			nodeQueue.push(node->leftChild);
-			nodeQueue.push(node->rightChild);
-			depthSum += 2;
+			auto node = nodeQueue.front();
+			if (node->split()) {
+				nodeQueue.push(node->leftChild.get());
+				nodeQueue.push(node->rightChild.get());
+				nodesAddedToThisDepth += 2;
+			}
+			else
+			{
+				leafNodes.push(node);
+			}
 			nodeQueue.pop();
 		}
-		depthSize = depthSum;
+		numberOfNodesAtCurrentDepth = nodesAddedToThisDepth;
+	}
+
+	while (!nodeQueue.empty())
+	{
+		leafNodes.push(nodeQueue.front());
+		nodeQueue.pop();
 	}
 	
 	// Generate rooms for the leafs
-	while (!nodeQueue.empty())
+	while (!leafNodes.empty())
 	{
-		nodeQueue.front()->generateRoom();
-		nodeQueue.pop();
+		leafNodes.front()->generateRoom();
+		leafNodes.pop();
 	}
 
 	// Connect the nodes depth-first
@@ -118,23 +129,21 @@ std::shared_ptr<BSPDungeon> BSPDungeon::generateDungeon(int width, int height, i
 	// Add starting position for the player
 	auto & room = map->rooms[0];
 
-	auto x = rng::randomIntBetween(room.left + 2, room.left + room.width - 2);
-	auto y = rng::randomIntBetween(room.top + 2, room.top + room.height - 2);
+	auto playerStartPos = Map2D::getRandomPointInsideRoom(room);
 
-	map->setTileTypeAt(x, y, TileType::PLAYER);
+	map->setTileTypeAt(playerStartPos.x, playerStartPos.y, TileType::PLAYER);
 
 	auto endRoomIndex = rng::randomIntBetween(1, map->rooms.size() - 1);
 	room = map->rooms[endRoomIndex];
 
-	x = rng::randomIntBetween(room.left + 2, room.left + room.width - 2);
-	y = rng::randomIntBetween(room.top + 2, room.top + room.height - 2);
+	auto stairsPos = Map2D::getRandomPointInsideRoom(room);
 
-	map->setTileTypeAt(x, y, TileType::STAIRS);
+	map->setTileTypeAt(stairsPos.x, stairsPos.y, TileType::STAIRS);
 
 	return root;
 }
 
-void BSPDungeon::split()
+bool BSPDungeon::split()
 {
 	// Create children for the node
 
@@ -182,9 +191,16 @@ void BSPDungeon::split()
 		rightLimits = sf::Rect<int>(limits.left, splitPos, limits.width, length - splitLength);
 	}
 
+	if (!roomIsValidSize(leftLimits) || !roomIsValidSize(rightLimits))
+	{
+		return false;
+	}
+
 	// Create child nodes
-	leftChild = std::make_shared<BSPDungeon>(leftLimits, map);
-	rightChild = std::make_shared<BSPDungeon>(rightLimits, map);
+	leftChild = std::make_unique<BSPDungeon>(leftLimits, map);
+	rightChild = std::make_unique<BSPDungeon>(rightLimits, map);
+
+	return true;
 }
 
 void BSPDungeon::connect()
