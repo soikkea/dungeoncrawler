@@ -138,8 +138,9 @@ void Level::setTile(const sf::Vector2i pos, const TileType type)
 
 bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 {
-	float deltaX = (float)abs(start.x - end.x);
-	float deltaY = (float)abs(start.y - end.y);
+	// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+	int deltaX = abs(start.x - end.x);
+	int deltaY = abs(start.y - end.y);
 	float width = deltaX > deltaY ? deltaX : deltaY;
 	float height = deltaX < deltaY ? deltaX : deltaY;
 	float error = width * 0.5f;
@@ -158,6 +159,18 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 		s = start.y + sStep;
 		sEnd = end.y;
 		t = start.x;
+	}
+	if (deltaX == deltaY && deltaX > 1) {
+		if (loopOverX)
+		{
+			if (tileBlocksVision(start.x + sStep, start.y + tStep)) return false;
+			if (tileBlocksVision(end.x - sStep, end.y - tStep)) return false;
+		}
+		else
+		{
+			if (tileBlocksVision(start.x + tStep, start.y + sStep)) return false;
+			if (tileBlocksVision(end.x - tStep, end.y - sStep)) return false;
+		}
 	}
 	while (s != sEnd) {
 		if (loopOverX) {
