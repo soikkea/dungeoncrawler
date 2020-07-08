@@ -10,10 +10,6 @@ file(GLOB SOURCES
 	"./source/src/*.cpp"
 )
 
-file(GLOB TESTS
-	"./source/tests/*.cpp"
-)
-
 # Set this in cmake cache
 #set(SFML_DIR "path/to/SFML-2.5.1/lib/cmake/SFML")
 
@@ -44,7 +40,35 @@ add_custom_command(TARGET dungeoncrawler POST_BUILD
 		${CMAKE_SOURCE_DIR}/resources/ $<TARGET_FILE_DIR:dungeoncrawler>/resources/
 )
 
-add_executable(dungeoncrawler-tests ${TESTS})
+add_executable(dungeoncrawler-tests
+	"source/tests/test-main.cpp"
+	"source/tests/test-level.cpp"
+	"source/headers/globals.h"
+	"source/headers/level.h"
+	"source/src/level.cpp"
+	"source/headers/bspdungeon.h"
+	"source/src/bspdungeon.cpp"
+	"source/headers/rng.h"
+	"source/src/rng.cpp"
+	"source/headers/creature.h"
+	"source/src/creature.cpp"
+	"source/headers/item.h"
+	"source/src/item.cpp"
+	"source/headers/stat.h"
+	"source/src/stat.cpp"
+	"source/headers/skillset.h"
+	"source/src/skillset.cpp"
+	"source/headers/sprite.h"
+	"source/src/sprite.cpp"
+	"source/headers/player.h"
+	"source/src/player.cpp"
+	"source/headers/hud.h"
+	"source/src/hud.cpp"
+	"source/headers/hudbutton.h"
+	"source/src/hudbutton.cpp"
+	"source/headers/assets.h"
+	"source/src/assets.cpp"
+)
 
 target_include_directories(dungeoncrawler-tests PUBLIC
 	"./source/headers"
