@@ -7,8 +7,8 @@
 
 #include "bspdungeon.h"
 #include "item.h"
+#include "creature.h"
 
-class Creature;
 class Player;
 struct Map2D;
 enum class TileType;
