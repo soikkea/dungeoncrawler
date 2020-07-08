@@ -233,10 +233,10 @@ void BSPDungeon::connect()
 			 * aRight -> bLeft
 			 */
 
-			bool top = aTop > bBottom; // a below b
-			bool left = aLeft > bRight; // a right of b
-			bool bottom = aBottom < bTop; // a above b
-			bool right = aRight < bLeft; // a left of b
+			bool isABelowB = aTop > bBottom;
+			bool isARightOfB = aLeft > bRight;
+			bool isAAboveB = aBottom < bTop;
+			bool isALeftOfB = aRight < bLeft;
 
 			int cX, cY, dX, dY;
 			bool xOverlap, yOverlap;
@@ -249,12 +249,8 @@ void BSPDungeon::connect()
 			{
 				int midX = (cX + dX) / 2;
 
-				// TODO: Remove assert
-				assert(!map->getTileAt(midX, aTop).IsType(TileType::EMPTY));
-				assert(!map->getTileAt(midX, bBottom).IsType(TileType::EMPTY));
-
 				int cStart, cEnd;
-				if (top)
+				if (isABelowB)
 				{
 					cStart = bBottom;
 					cEnd = aTop;
@@ -270,12 +266,8 @@ void BSPDungeon::connect()
 			{
 				int midY = (cY + dY) / 2;
 
-				// TODO: Remove assert
-				assert(!map->getTileAt(aRight, midY).IsType(TileType::EMPTY));
-				assert(!map->getTileAt(bLeft, midY).IsType(TileType::EMPTY));
-
 				int cStart, cEnd;
-				if (right)
+				if (isALeftOfB)
 				{
 					cStart = aRight;
 					cEnd = bLeft;
@@ -298,15 +290,11 @@ void BSPDungeon::connect()
 				int offset = aYMid < bYMid ? -1 : 1;
 				createCorridor(aXMid, aYMid, bXMid, aYMid, CORRIDOR_WIDTH);
 				createCorridor(bXMid, aYMid + offset, bXMid, bYMid, CORRIDOR_WIDTH);
-
-				// TODO: Remove assert
-				assert(map->getTileAt(bXMid, aYMid).IsType(TileType::FLOOR));
 			}
 
 		}
 		else
 		{
-
 			auto& leftLimits = leftChild->limits;
 			auto& rightLimits = rightChild->limits;
 			
