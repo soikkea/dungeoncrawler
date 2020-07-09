@@ -141,23 +141,24 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 	// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 	int deltaX = abs(start.x - end.x);
 	int deltaY = abs(start.y - end.y);
+	if (deltaX <= 1 && deltaY <= 1) {
+		return true;
+	}
 	float width = deltaX > deltaY ? deltaX : deltaY;
 	float height = deltaX < deltaY ? deltaX : deltaY;
 	float error = width * 0.5f;
 	bool loopOverX = deltaX > deltaY;
-	int  s, t, sStep, tStep, sEnd;
+	int  s, t, sStep, tStep;
 	if (loopOverX) {
 		sStep = start.x < end.x ? 1 : -1;
 		tStep = start.y < end.y ? 1 : -1;
-		s = start.x + sStep;
-		sEnd = end.x;
+		s = start.x;
 		t = start.y;
 	}
 	else {
 		sStep = start.y < end.y ? 1 : -1;
 		tStep = start.x < end.x ? 1 : -1;
-		s = start.y + sStep;
-		sEnd = end.y;
+		s = start.y;
 		t = start.x;
 	}
 	if (deltaX == deltaY && deltaX > 1) {
@@ -172,20 +173,39 @@ bool Level::getLineOfSight(const sf::Vector2i & start, const sf::Vector2i & end)
 			if (tileBlocksVision(end.x - tStep, end.y - sStep)) return false;
 		}
 	}
-	while (s != sEnd) {
-		if (loopOverX) {
-			// s, t
-			if (tileBlocksVision(s, t)) return false;
+	int x, y;
+	while (true) {
+
+		if (loopOverX)
+		{
+			x = s;
+			y = t;
 		}
-		else {
-			// t, s
-			if (tileBlocksVision(t, s)) return false;
+		else
+		{
+			x = t;
+			y = s;
 		}
+
+		if (x == end.x && y == end.y)
+		{
+			break;
+		}
+
+		if ((x != start.x ||
+			 y != start.y) &&
+			tileBlocksVision(x, y))
+		{
+			return false;
+		}
+
 		error = error + height;
-		if (error >= width) {
+		if (error >= width)
+		{
 			t += tStep;
-			error = error - width;
+			error = error - width; 
 		}
+
 		s += sStep;
 	}
 	return true;

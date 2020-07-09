@@ -68,7 +68,6 @@ TEST_CASE("Line of sight works correctly", "[level]") {
 
 	SECTION( "can't see through double wall" ) {
 		REQUIRE(level.getLineOfSight(startPos, sf::Vector2i(3, 0)));
-		REQUIRE(level.getLineOfSight(startPos, sf::Vector2i(3, 1)));
 		REQUIRE(!level.getLineOfSight(startPos, sf::Vector2i(3, 2)));
 		REQUIRE(!level.getLineOfSight(startPos, sf::Vector2i(3, 3)));
 		REQUIRE(!level.getLineOfSight(startPos, sf::Vector2i(3, 4)));
