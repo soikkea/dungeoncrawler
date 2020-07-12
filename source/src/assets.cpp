@@ -26,6 +26,25 @@ void Assets::LoadTextures()
 	texture.display();
 
 	_textures["increment_button"] = texture.getTexture();
+
+	// MenuButton texture
+	texture.create((unsigned)MenuButton::SIZE.x, (unsigned)MenuButton::SIZE.y);
+	texture.clear();
+	background = sf::RectangleShape(MenuButton::SIZE);
+	background.setFillColor(sf::Color::Blue);
+
+	texture.draw(background);
+
+	constexpr float foregroundSize = 0.94f;
+
+	sf::RectangleShape foreground(foregroundSize * MenuButton::SIZE);
+	foreground.setFillColor(sf::Color::Black);
+	foreground.setPosition((1.f - foregroundSize) * 0.5f * MenuButton::SIZE.x, (1.f - foregroundSize) * 0.5f * MenuButton::SIZE.y);
+	texture.draw(foreground);
+
+	texture.display();
+
+	_textures["menu_button"] = texture.getTexture();
 }
 
 void Assets::LoadFonts()
