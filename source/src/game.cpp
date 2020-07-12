@@ -15,6 +15,7 @@ Game::Game() :
 	m_window->setView(*_gameView);
 
 	Assets::get().LoadTextures();
+	Assets::get().LoadFonts();
 
 	_hud = std::move(Hud(
 		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH * 0.8f, globals::SCREEN_HEIGHT * 0.2f),

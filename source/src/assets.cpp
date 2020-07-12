@@ -49,6 +49,11 @@ void Assets::LoadTextures()
 
 void Assets::LoadFonts()
 {
+	sf::Font font;
+	if (!font.loadFromFile("./resources/fonts/Roboto-Regular.ttf")) {
+		throw std::runtime_error("Could not load fonts");
+	}
+	_fonts["main"] = font;
 }
 
 Assets::Assets()
