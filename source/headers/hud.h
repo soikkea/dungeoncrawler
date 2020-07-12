@@ -23,6 +23,7 @@ public:
 	void draw(sf::RenderWindow& window, const Level& level);
 	void drawInventory(sf::RenderWindow& window, Player& player);
 	void drawSkills(sf::RenderWindow& window, Player& player);
+	void drawMenu(sf::RenderWindow& window, Player& player);
 	void update(float elapsedTime, const Player& player);
 
 	std::string const * getClickedButton(int x, int y);
@@ -44,4 +45,5 @@ private:
 	sf::Text _text;
 	sf::Text _logText;
 	std::map<std::string, std::unique_ptr<HudButton>> _skillsButtons;
+	std::map<std::string, std::unique_ptr<HudButton>> _menuButtons;
 };

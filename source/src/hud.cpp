@@ -53,6 +53,15 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 	addIncrementButton(sf::Vector2f(320.f, 112.f), "increment_attr_constitution");
 	addIncrementButton(sf::Vector2f(320.f, 132.f), "increment_attr_strength");
 	addIncrementButton(sf::Vector2f(320.f, 172.f), "increment_skill_melee");
+
+	auto addMenuButton = [&](sf::Vector2f& position, std::string name, std::string text)
+	{
+		_menuButtons[name] = std::make_unique<MenuButton>(position, name, text);
+	};
+
+	addMenuButton(sf::Vector2f(100.f, 100.f), "menu_new_game", "New Game");
+	addMenuButton(sf::Vector2f(100.f, 0.f), "menu_continue_game", "Continue Game");
+	addMenuButton(sf::Vector2f(100.f, 200.f), "menu_quit_game", "Quit Game");
 }
 
 Hud::Hud(Hud & otherHud) :
@@ -76,7 +85,8 @@ Hud::Hud(Hud&& otherHud) noexcept :
 	_font(std::move(otherHud._font)),
 	_text(std::move(otherHud._text)),
 	_logText(std::move(otherHud._logText)),
-	_skillsButtons(std::move(otherHud._skillsButtons))
+	_skillsButtons(std::move(otherHud._skillsButtons)),
+	_menuButtons(std::move(otherHud._menuButtons))
 {
 	_text.setFont(_font);
 	_logText.setFont(_font);
@@ -208,6 +218,25 @@ void Hud::drawSkills(sf::RenderWindow& window, Player& player)
 	}
 }
 
+void Hud::drawMenu(sf::RenderWindow& window, Player& player)
+{
+	auto view = window.getDefaultView();
+
+	auto viewSize = view.getSize();
+
+	window.setView(view);
+
+	for each (auto & pair in _menuButtons)
+	{
+		auto& name = pair.first;
+		auto& button = *(pair.second.get());
+		if (name.find("menu_continue") == 0) {
+			button.active = player.playerCreature.isAlive();
+		}
+		window.draw(button);
+	}
+}
+
 void Hud::update(float elapsedTime, const Player& player)
 {
 	_miniMapView.setCenter(player.playerCreature.getWorldCenter());
@@ -226,6 +255,14 @@ void Hud::update(float elapsedTime, const Player& player)
 std::string const* Hud::getClickedButton(int x, int y)
 {
 	for each (auto& pair in _skillsButtons)
+	{
+		auto& name = pair.first;
+		auto& button = *pair.second.get();
+		if (button.sprite.getGlobalBounds().contains(x, y)) {
+			return (&name);
+		}
+	}
+	for each (auto & pair in _menuButtons)
 	{
 		auto& name = pair.first;
 		auto& button = *pair.second.get();
@@ -278,6 +315,7 @@ Hud& Hud::operator=(Hud&& other) noexcept
 	_logText = std::move(other._logText);
 	_logText.setFont(_font);
 	_skillsButtons = std::move(other._skillsButtons);
+	_menuButtons = std::move(other._menuButtons);
 	return *this;
 }
 
