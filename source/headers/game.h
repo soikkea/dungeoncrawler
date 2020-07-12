@@ -14,6 +14,7 @@ private:
 	void gameLoop();
 	void draw();
 	void update(float elapsedTime);
+	bool handleMenuEvent(sf::Event& event);
 	bool handleGameEvent(sf::Event& event);
 	bool handleInventoryEvent(sf::Event& event);
 	bool handleSkillsEvent(sf::Event& event);
@@ -26,7 +27,16 @@ private:
 		MODE_MENU
 	};
 
+	enum class GameStatus
+	{
+		NOT_STARTED,
+		STARTED,
+		PAUSED,
+		PLAYER_DIED
+	};
+
 	int _gameMode = MODE_GAME;
+	GameStatus _gameStatus = GameStatus::NOT_STARTED;
 	sf::RenderWindow* m_window;
 	Player m_player;
 	Level _level;

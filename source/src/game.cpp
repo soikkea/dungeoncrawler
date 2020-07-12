@@ -28,6 +28,8 @@ Game::Game() :
 
 	initializeNewLevel();
 
+	_gameStatus = GameStatus::STARTED;
+
 	this->gameLoop();
 }
 
@@ -57,19 +59,13 @@ void Game::gameLoop() {
 		while (m_window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				m_window->close();
-			// Controls
-			if (event.type == sf::Event::KeyPressed) {
-				switch (event.key.code)
-				{
-				case sf::Keyboard::Escape:
-					m_window->close();
-					break;
-				default:
-					break;
-				}
-			}
+
+			// Handle events
 			switch (_gameMode)
 			{
+			case MODE_MENU:
+				handleMenuEvent(event);
+				break;
 			case MODE_GAME:
 				handleGameEvent(event);
 				break;
@@ -90,6 +86,49 @@ void Game::gameLoop() {
 		update(elapsed_time);
 		draw();
 	}
+}
+
+bool Game::handleMenuEvent(sf::Event& event)
+{
+	if (event.type == sf::Event::KeyPressed) {
+		switch (event.key.code)
+		{
+		case sf::Keyboard::Escape:
+			switch (_gameStatus)
+			{
+			case Game::GameStatus::STARTED:
+			case Game::GameStatus::PAUSED:
+				_gameMode = MODE_GAME;
+				_gameStatus = GameStatus::STARTED;
+				return true;
+			case Game::GameStatus::NOT_STARTED:
+			case Game::GameStatus::PLAYER_DIED:
+				m_window->close();
+				return true;
+			default:
+				break;
+			}
+		default:
+			break;
+		}
+	}
+	else if (event.type == sf::Event::MouseButtonPressed) {
+		if (event.mouseButton.button == sf::Mouse::Left) {
+			auto buttonName = _hud.getClickedButton(event.mouseButton.x, event.mouseButton.y);
+			if (buttonName == nullptr)
+				return true;
+			else if (*buttonName == "menu_quit_game") {
+				m_window->close();
+				return true;
+			}
+			else if (*buttonName == "menu_continue_game") {
+				_gameMode = MODE_GAME;
+				_gameStatus = GameStatus::STARTED;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool Game::handleGameEvent(sf::Event& event) {
@@ -113,6 +152,10 @@ bool Game::handleGameEvent(sf::Event& event) {
 			return true;
 		case sf::Keyboard::C:
 			_gameMode = MODE_SKILLS;
+			return true;
+		case sf::Keyboard::Escape:
+			_gameStatus = GameStatus::PAUSED;
+			_gameMode = MODE_MENU;
 			return true;
 		default:
 			break;
@@ -200,12 +243,19 @@ void Game::draw() {
 
 	_hud.draw(*m_window, _level);
 
-	if (_gameMode == MODE_INVENTORY) {
-		_hud.drawInventory(*m_window, m_player);
-	}
-	else if (_gameMode == MODE_SKILLS)
+	switch (_gameMode)
 	{
+	case MODE_INVENTORY:
+		_hud.drawInventory(*m_window, m_player);
+		break;
+	case MODE_SKILLS:
 		_hud.drawSkills(*m_window, m_player);
+		break;
+	case MODE_MENU:
+		_hud.drawMenu(*m_window, m_player);
+		break;
+	default:
+		break;
 	}
 
 	m_window->display();
@@ -218,6 +268,12 @@ void Game::update(float elapsedTime) {
 	m_window->setTitle(title);
 
 	m_player.playerCreature.calculateStats();
+
+	if (!m_player.playerCreature.isAlive())
+	{
+		_gameStatus = GameStatus::PLAYER_DIED;
+		_gameMode = MODE_MENU;
+	}
 
 	if (m_player.isTurnOver()) {
 		_level.update(m_player);
