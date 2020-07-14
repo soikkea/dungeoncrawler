@@ -26,9 +26,8 @@ Game::Game() :
 
 	_level = Level();
 
-	initializeNewLevel();
-
-	_gameStatus = GameStatus::STARTED;
+	_gameStatus = GameStatus::NOT_STARTED;
+	_gameMode = MODE_MENU;
 
 	this->gameLoop();
 }
@@ -36,6 +35,21 @@ Game::Game() :
 Game::~Game() {
 	delete m_window;
 	delete _gameView;
+}
+
+bool Game::isInProgress()
+{
+	return _gameStatus == GameStatus::STARTED;
+}
+
+void Game::startNewGame()
+{
+	m_player.resetPlayer();
+
+	initializeNewLevel();
+
+	_gameStatus = GameStatus::STARTED;
+	_gameMode = MODE_GAME;
 }
 
 void Game::initializeNewLevel()
@@ -97,7 +111,6 @@ bool Game::handleMenuEvent(sf::Event& event)
 			switch (_gameStatus)
 			{
 			case Game::GameStatus::STARTED:
-			case Game::GameStatus::PAUSED:
 				_gameMode = MODE_GAME;
 				_gameStatus = GameStatus::STARTED;
 				return true;
@@ -117,6 +130,10 @@ bool Game::handleMenuEvent(sf::Event& event)
 			auto buttonName = _hud.getClickedButton(event.mouseButton.x, event.mouseButton.y);
 			if (buttonName == nullptr)
 				return true;
+			else if (*buttonName == "menu_new_game") {
+				startNewGame();
+				return true;
+			}
 			else if (*buttonName == "menu_quit_game") {
 				m_window->close();
 				return true;
@@ -154,7 +171,6 @@ bool Game::handleGameEvent(sf::Event& event) {
 			_gameMode = MODE_SKILLS;
 			return true;
 		case sf::Keyboard::Escape:
-			_gameStatus = GameStatus::PAUSED;
 			_gameMode = MODE_MENU;
 			return true;
 		default:
@@ -238,10 +254,13 @@ void Game::draw() {
 	_gameView->setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 0.8f));
 	m_window->setView(*_gameView);
 
-	m_window->draw(_level);
-	m_window->draw(m_player.playerCreature);
 
-	_hud.draw(*m_window, _level);
+	if (_gameMode != MODE_MENU) {
+		m_window->draw(_level);
+		m_window->draw(m_player.playerCreature);
+
+		_hud.draw(*m_window, _level);
+	}
 
 	switch (_gameMode)
 	{
@@ -252,7 +271,7 @@ void Game::draw() {
 		_hud.drawSkills(*m_window, m_player);
 		break;
 	case MODE_MENU:
-		_hud.drawMenu(*m_window, m_player);
+		_hud.drawMenu(*m_window, *this);
 		break;
 	default:
 		break;

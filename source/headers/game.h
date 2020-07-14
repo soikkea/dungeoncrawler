@@ -9,7 +9,10 @@ class Game {
 public:
 	Game();
 	~Game();
+
+	bool isInProgress();
 private:
+	void startNewGame();
 	void initializeNewLevel();
 	void gameLoop();
 	void draw();
@@ -31,7 +34,6 @@ private:
 	{
 		NOT_STARTED,
 		STARTED,
-		PAUSED,
 		PLAYER_DIED
 	};
 
