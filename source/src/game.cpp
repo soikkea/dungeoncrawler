@@ -302,7 +302,7 @@ void Game::update(float elapsedTime) {
 
 	if (_level.endReached) {
 		initializeNewLevel();
-		_hud.actionLog.push_back("You descended to a lower level.");
+		_hud.actionLog.push_back("You descended to a lower level.\n");
 	}
 
 	_hud.update(elapsedTime, m_player);
