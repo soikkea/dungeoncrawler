@@ -34,7 +34,14 @@ MenuButton::MenuButton(const sf::Vector2f& position, const std::string& name, co
 	sprite.setPosition(position);
 	active = true;
 	textObject = sf::Text(text, Assets::get().getFont("main"), 16);
-	textObject.setPosition(position);
+	auto textBounds = textObject.getLocalBounds();
+	auto textSize = sf::Vector2f(textBounds.width, textBounds.height);
+	auto textOffset = (SIZE - textSize) * 0.5f;
+
+	textObject.setPosition(
+		position +
+		textOffset
+	);
 }
 
 void MenuButton::draw(sf::RenderTarget& target, sf::RenderStates states) const
