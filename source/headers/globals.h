@@ -4,10 +4,14 @@
 #include <SFML/System.hpp>
 
 namespace globals {
-	const int SCREEN_WIDTH = 800;
-	const int SCREEN_HEIGHT = 600;
+	constexpr int SCREEN_WIDTH = 800;
+	constexpr int SCREEN_HEIGHT = 600;
 
-	const int TILE_SIZE = 32;
+	constexpr int TILE_SIZE = 32;
+
+	inline sf::Vector2f screenSize() {
+		return sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT);
+	}
 }
 
 enum class Direction {
