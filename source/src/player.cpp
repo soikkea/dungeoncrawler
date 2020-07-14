@@ -59,3 +59,12 @@ void Player::handleMoveInput(Direction direction, Level & level)
 		}
 	}
 }
+
+void Player::resetPlayer()
+{
+	playerCreature = Creature(0, 0);
+	playerCreature.getInventory().clear();
+	playerCreature.setColor(sf::Color::Blue);
+	playerCreature.setName("Player");
+	playerCreature.equipWeapon(std::make_unique<Weapon>("Sword", 1, 2, 100));
+}

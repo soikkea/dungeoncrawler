@@ -16,6 +16,8 @@ public:
 
 	void handleMoveInput(Direction direction, Level& level);
 
+	void resetPlayer();
+
 	Creature playerCreature;
 
 private:
