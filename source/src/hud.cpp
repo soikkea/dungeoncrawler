@@ -5,6 +5,7 @@
 #include "hud.h"
 #include "player.h"
 #include "level.h"
+#include "game.h"
 
 
 std::list<std::string> Hud::actionLog = std::list<std::string>();
@@ -59,9 +60,16 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 		_menuButtons[name] = std::make_unique<MenuButton>(position, name, text);
 	};
 
-	addMenuButton(sf::Vector2f(100.f, 100.f), "menu_new_game", "New Game");
-	addMenuButton(sf::Vector2f(100.f, 0.f), "menu_continue_game", "Continue Game");
-	addMenuButton(sf::Vector2f(100.f, 200.f), "menu_quit_game", "Quit Game");
+	auto menuButtonSize = MenuButton::SIZE;
+	auto screenSize = globals::screenSize();
+
+	auto centerButtonPos = (screenSize - menuButtonSize) * 0.5f;
+
+	auto buttonYOffset = sf::Vector2f(0.f, menuButtonSize.y);
+
+	addMenuButton(centerButtonPos, "menu_new_game", "New Game");
+	addMenuButton(centerButtonPos - buttonYOffset, "menu_continue_game", "Continue Game");
+	addMenuButton(centerButtonPos + buttonYOffset, "menu_quit_game", "Quit Game");
 }
 
 Hud::Hud(Hud & otherHud) :
@@ -218,7 +226,7 @@ void Hud::drawSkills(sf::RenderWindow& window, Player& player)
 	}
 }
 
-void Hud::drawMenu(sf::RenderWindow& window, Player& player)
+void Hud::drawMenu(sf::RenderWindow& window, Game& game)
 {
 	auto view = window.getDefaultView();
 
@@ -231,7 +239,7 @@ void Hud::drawMenu(sf::RenderWindow& window, Player& player)
 		auto& name = pair.first;
 		auto& button = *(pair.second.get());
 		if (name.find("menu_continue") == 0) {
-			button.active = player.playerCreature.isAlive();
+			button.active = game.isInProgress();
 		}
 		window.draw(button);
 	}

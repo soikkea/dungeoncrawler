@@ -11,6 +11,7 @@
 
 class Player;
 class Level;
+class Game;
 
 class Hud {
 public:
@@ -23,7 +24,7 @@ public:
 	void draw(sf::RenderWindow& window, const Level& level);
 	void drawInventory(sf::RenderWindow& window, Player& player);
 	void drawSkills(sf::RenderWindow& window, Player& player);
-	void drawMenu(sf::RenderWindow& window, Player& player);
+	void drawMenu(sf::RenderWindow& window, Game& game);
 	void update(float elapsedTime, const Player& player);
 
 	std::string const * getClickedButton(int x, int y);
