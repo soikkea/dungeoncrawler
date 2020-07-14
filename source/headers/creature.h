@@ -17,6 +17,8 @@ class Creature : public Sprite
 public:
 	Creature(int x, int y);
 	virtual ~Creature();
+	Creature(Creature& other);
+	Creature& operator=(Creature& other);
 
 	const int getHitPoints() const;
 	const int getMaxHitPoints() const;

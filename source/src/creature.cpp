@@ -29,6 +29,37 @@ Creature::~Creature()
 {
 }
 
+Creature::Creature(Creature& other) :
+	stats(other.stats),
+	_name(other._name),
+	_level(other._level),
+	_experience(other._experience),
+	_experienceWorth(other._experienceWorth),
+	_experienceReqToNextLevel(other._experienceReqToNextLevel),
+	_skillSet(other._skillSet),
+	_sightLine(other._sightLine),
+	_seesPlayer(other._seesPlayer),
+	_equippedWeapon(std::make_unique<Weapon>("Weak Fists", 0, 1, 50))
+{
+}
+
+Creature& Creature::operator=(Creature& other)
+{
+	if (&other == this)
+		return *this;
+	stats = other.stats;
+	_name = other._name;
+	_level = other._level;
+	_experience = other._experience;
+	_experienceWorth = other._experienceWorth;
+	_experienceReqToNextLevel = other._experienceReqToNextLevel;
+	_skillSet = other._skillSet;
+	_sightLine = other._sightLine;
+	_seesPlayer = other._seesPlayer;
+	_equippedWeapon = std::make_unique<Weapon>("Weak Fists", 0, 1, 50);
+	return *this;
+}
+
 const int Creature::getHitPoints() const
 {
 	return stats.at(StatEnum::HitPoints).value;
