@@ -47,7 +47,7 @@ class BSPDungeon
 {
 public:
 	static const int CORRIDOR_WIDTH = 1;
-	static constexpr int MIN_ROOM_SIZE = 3;
+	static constexpr int MIN_ROOM_SIZE = 4;
 	BSPDungeon(sf::Rect<int> limits, std::shared_ptr<Map2D> map);
 	static std::unique_ptr<BSPDungeon> generateDungeon(int width, int height, int depth);
 	bool split();
