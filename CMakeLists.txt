@@ -68,6 +68,8 @@ add_executable(dungeoncrawler-tests
 	"source/src/hudbutton.cpp"
 	"source/headers/assets.h"
 	"source/src/assets.cpp"
+	"source/headers/game.h"
+	"source/src/game.cpp"
 )
 
 target_include_directories(dungeoncrawler-tests PUBLIC
