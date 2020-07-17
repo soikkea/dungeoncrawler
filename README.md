@@ -18,3 +18,8 @@ sfml-graphics-2.dll
 sfml-system-2.dll
 sfml-windows-2.dll
 ```
+
+## How to play
+
+Move with WASD. C opens character screen and I opens inventory. Use items in inventory with number keys.
+Open main menu with Esc. Use menus with mouse.
