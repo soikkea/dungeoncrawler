@@ -42,7 +42,6 @@ private:
 	sf::View _miniMapView;
 	sf::FloatRect _infoViewPort;
 	sf::FloatRect _miniMapViewPort;
-	sf::Font _font;
 	sf::Text _text;
 	sf::Text _logText;
 	std::map<std::string, std::unique_ptr<HudButton>> _skillsButtons;

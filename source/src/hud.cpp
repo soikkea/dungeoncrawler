@@ -6,6 +6,7 @@
 #include "player.h"
 #include "level.h"
 #include "game.h"
+#include "assets.h"
 
 
 std::list<std::string> Hud::actionLog = std::list<std::string>();
@@ -27,20 +28,14 @@ Hud::Hud(const sf::FloatRect & infoViewSize, const sf::FloatRect & infoViewPort,
 	_infoView.setViewport(_infoViewPort);
 	_miniMapView.setViewport(_miniMapViewPort);
 
-	_font = sf::Font();
-
-	if (!_font.loadFromFile("./resources/fonts/Roboto-Regular.ttf")) {
-		throw std::runtime_error("Could not load fonts");
-	}
-
 	_text = sf::Text();
-	_text.setFont(_font);
+	_text.setFont(Assets::get().getFont("main"));
 	_text.setFillColor(sf::Color::White);
 	_text.setCharacterSize(16);
 	_text.setPosition(0.f, 0.f);
 
 	_logText = sf::Text();
-	_logText.setFont(_font);
+	_logText.setFont(Assets::get().getFont("main"));
 	_logText.setFillColor(sf::Color::White);
 	_logText.setCharacterSize(16);
 	_logText.setPosition(150.f, 0.f);
@@ -77,12 +72,11 @@ Hud::Hud(Hud & otherHud) :
 	_miniMapView(otherHud._miniMapView),
 	_infoViewPort(otherHud._infoViewPort),
 	_miniMapViewPort(otherHud._miniMapViewPort),
-	_font(otherHud._font),
 	_text(otherHud._text),
 	_logText(otherHud._logText)
 {
-	_text.setFont(_font);
-	_logText.setFont(_font);
+	_text.setFont(Assets::get().getFont("main"));
+	_logText.setFont(Assets::get().getFont("main"));
 }
 
 Hud::Hud(Hud&& otherHud) noexcept :
@@ -90,14 +84,13 @@ Hud::Hud(Hud&& otherHud) noexcept :
 	_miniMapView(std::move(otherHud._miniMapView)),
 	_infoViewPort(std::move(otherHud._infoViewPort)),
 	_miniMapViewPort(std::move(otherHud._miniMapViewPort)),
-	_font(std::move(otherHud._font)),
 	_text(std::move(otherHud._text)),
 	_logText(std::move(otherHud._logText)),
 	_skillsButtons(std::move(otherHud._skillsButtons)),
 	_menuButtons(std::move(otherHud._menuButtons))
 {
-	_text.setFont(_font);
-	_logText.setFont(_font);
+	_text.setFont(Assets::get().getFont("main"));
+	_logText.setFont(Assets::get().getFont("main"));
 }
 
 Hud::~Hud()
@@ -303,11 +296,10 @@ Hud & Hud::operator=(Hud & other)
 	_miniMapView = other._miniMapView;
 	_infoViewPort = other._infoViewPort;
 	_miniMapViewPort = other._miniMapViewPort;
-	_font = other._font;
 	_text = other._text;
-	_text.setFont(_font);
 	_logText = other._logText;
-	_logText.setFont(_font);
+	_text.setFont(Assets::get().getFont("main"));
+	_logText.setFont(Assets::get().getFont("main"));
 	return *this;
 }
 
@@ -317,11 +309,10 @@ Hud& Hud::operator=(Hud&& other) noexcept
 	_miniMapView = std::move(other._miniMapView);
 	_infoViewPort = std::move(other._infoViewPort);
 	_miniMapViewPort = std::move(other._miniMapViewPort);
-	_font = std::move(other._font);
 	_text = std::move(other._text);
-	_text.setFont(_font);
 	_logText = std::move(other._logText);
-	_logText.setFont(_font);
+	_text.setFont(Assets::get().getFont("main"));
+	_logText.setFont(Assets::get().getFont("main"));
 	_skillsButtons = std::move(other._skillsButtons);
 	_menuButtons = std::move(other._menuButtons);
 	return *this;
@@ -330,7 +321,7 @@ Hud& Hud::operator=(Hud&& other) noexcept
 sf::Text Hud::createText(std::string text, float xPos, float yPos, int size)
 {
 	auto sfText = sf::Text();
-	sfText.setFont(_font);
+	sfText.setFont(Assets::get().getFont("main"));
 	sfText.setFillColor(sf::Color::White);
 	sfText.setCharacterSize(size);
 	sfText.setPosition(xPos, yPos);
