@@ -150,8 +150,7 @@ std::vector<std::unique_ptr<Item>>& Creature::getInventory()
 
 bool Creature::addItem(std::unique_ptr<Item>& item)
 {
-	// TODO: No magic numbers
-	if (_inventory.size() >= 5)
+	if (_inventory.size() >= MAX_INVENTORY_SIZE)
 		return false;
 
 	_inventory.push_back(std::move(item));

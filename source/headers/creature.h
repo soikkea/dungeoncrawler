@@ -51,6 +51,8 @@ public:
 	virtual void calculateStats(bool force = false);
 
 	std::map<StatEnum, Stat> stats;
+
+	static constexpr int MAX_INVENTORY_SIZE = 5;
 protected:
 	std::string _name;
 	int _level;
