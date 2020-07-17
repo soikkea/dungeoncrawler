@@ -8,21 +8,21 @@ Game::Game() :
 	m_player(0, 0)
 {
 	// Initialize RendererWindow
-	m_window = new sf::RenderWindow(sf::VideoMode(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT), "Dungeoncrawler");
+	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT), "Dungeoncrawler");
 
-	_gameView = new sf::View(sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT * 0.8f));
+	_gameView = std::make_unique<sf::View>(sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT * 0.8f));
 
-	m_window->setView(*_gameView);
+	_window->setView(*_gameView);
 
 	Assets::get().LoadTextures();
 	Assets::get().LoadFonts();
 
-	_hud = std::move(Hud(
+	_hud = std::make_unique<Hud>(
 		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH * 0.8f, globals::SCREEN_HEIGHT * 0.2f),
 		sf::FloatRect(0.f, 0.8f, 1.f, 0.2f),
 		sf::FloatRect(0.f, 0.f, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT),
 		sf::FloatRect(0.8f, 0.8f, 0.2f, 0.2f)
-	));
+	);
 
 	_level = Level();
 
@@ -32,9 +32,8 @@ Game::Game() :
 	this->gameLoop();
 }
 
-Game::~Game() {
-	delete m_window;
-	delete _gameView;
+Game::~Game()
+{
 }
 
 bool Game::isInProgress()
@@ -68,11 +67,11 @@ void Game::gameLoop() {
 
 	float last_update_time = clock.getElapsedTime().asSeconds();
 
-	while (m_window->isOpen()) {
+	while (_window->isOpen()) {
 		sf::Event event;
-		while (m_window->pollEvent(event)) {
+		while (_window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
-				m_window->close();
+				_window->close();
 
 			// Handle events
 			switch (_gameMode)
@@ -116,7 +115,7 @@ bool Game::handleMenuEvent(sf::Event& event)
 				return true;
 			case Game::GameStatus::NOT_STARTED:
 			case Game::GameStatus::PLAYER_DIED:
-				m_window->close();
+				_window->close();
 				return true;
 			default:
 				break;
@@ -127,7 +126,7 @@ bool Game::handleMenuEvent(sf::Event& event)
 	}
 	else if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
-			auto buttonName = _hud.getClickedButton(event.mouseButton.x, event.mouseButton.y);
+			auto buttonName = _hud->getClickedButton(event.mouseButton.x, event.mouseButton.y);
 			if (buttonName == nullptr)
 				return true;
 			else if (*buttonName == "menu_new_game") {
@@ -135,7 +134,7 @@ bool Game::handleMenuEvent(sf::Event& event)
 				return true;
 			}
 			else if (*buttonName == "menu_quit_game") {
-				m_window->close();
+				_window->close();
 				return true;
 			}
 			else if (*buttonName == "menu_continue_game") {
@@ -222,7 +221,7 @@ bool Game::handleSkillsEvent(sf::Event& event) {
 	}
 	else if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
-			auto buttonName = _hud.getClickedButton(event.mouseButton.x, event.mouseButton.y);
+			auto buttonName = _hud->getClickedButton(event.mouseButton.x, event.mouseButton.y);
 			if (buttonName == nullptr)
 				return true;
 			else if (*buttonName == "increment_attr_agility") {
@@ -247,44 +246,44 @@ bool Game::handleSkillsEvent(sf::Event& event) {
 }
 
 void Game::draw() {
-	m_window->clear();
+	_window->clear();
 
 	// Center window on player
 	_gameView->setCenter(m_player.playerCreature.getWorldCenter());
 	_gameView->setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 0.8f));
-	m_window->setView(*_gameView);
+	_window->setView(*_gameView);
 
 
 	if (_gameMode != MODE_MENU) {
-		m_window->draw(_level);
-		m_window->draw(m_player.playerCreature);
+		_window->draw(_level);
+		_window->draw(m_player.playerCreature);
 
-		_hud.draw(*m_window, _level);
+		_hud->draw(*_window, _level);
 	}
 
 	switch (_gameMode)
 	{
 	case MODE_INVENTORY:
-		_hud.drawInventory(*m_window, m_player);
+		_hud->drawInventory(*_window, m_player);
 		break;
 	case MODE_SKILLS:
-		_hud.drawSkills(*m_window, m_player);
+		_hud->drawSkills(*_window, m_player);
 		break;
 	case MODE_MENU:
-		_hud.drawMenu(*m_window, *this);
+		_hud->drawMenu(*_window, *this);
 		break;
 	default:
 		break;
 	}
 
-	m_window->display();
+	_window->display();
 }
 
 void Game::update(float elapsedTime) {
 	char buffer[100];
 	snprintf(buffer, sizeof(buffer), "Dungeoncrawler, FPS=%3.2f", 1.0f/elapsedTime);
 	std::string title = buffer;
-	m_window->setTitle(title);
+	_window->setTitle(title);
 
 	m_player.playerCreature.calculateStats();
 
@@ -302,8 +301,8 @@ void Game::update(float elapsedTime) {
 
 	if (_level.endReached) {
 		initializeNewLevel();
-		_hud.actionLog.push_back("You descended to a lower level.\n");
+		_hud->actionLog.push_back("You descended to a lower level.\n");
 	}
 
-	_hud.update(elapsedTime, m_player);
+	_hud->update(elapsedTime, m_player);
 }

@@ -1,4 +1,6 @@
 #pragma once
+
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "player.h"
 #include "level.h"
@@ -39,9 +41,9 @@ private:
 
 	int _gameMode = MODE_GAME;
 	GameStatus _gameStatus = GameStatus::NOT_STARTED;
-	sf::RenderWindow* m_window;
+	std::unique_ptr<sf::RenderWindow> _window;
 	Player m_player;
 	Level _level;
-	sf::View* _gameView;
-	Hud _hud;
+	std::unique_ptr<sf::View> _gameView;
+	std::unique_ptr<Hud> _hud;
 };
